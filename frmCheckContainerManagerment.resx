@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <metadata name="OpenFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>149, 17</value>
+  </metadata>
+  <data name="Label3.ToolTip" xml:space="preserve">
+    <value>Newport,cat lai:
+sheet DailyReportSL_Imp1:
+bai	hangtau	chukt	socont	kichco	trangthai	trongluong	pa	solenh	soseal	ngtinhluu	ngthuchien	gio	taun	chuyenn	taux	chuyenx	cang	imo	dkienha	tenkh	huong	giao	nhan	ghichu	job_date	
+CTL	CHI	CSC	AMFU 8819626	4500	FL	20.0000	GTHA		476623	09-04-2007	09-07-2007	1:36	HRH	0053S						WOODWORTH	1	CTL	KHA		09-08-2007	
+CTL	CHI	CSC	CAXU 7464877	4200	MT	0.0000	CAPR	HOTUK4W1779		09-04-2007	09-08-2007	7:6	HRH	0053S	MTC	0040N	TUA			BIRKART - EAST WEST FREIGHT LTD	1	CTL	KHA		09-08-2007	
+CTL	CHI	CSC	CCLU 1002571	2230	MT	0.0000	CAPR	8SGNBNE4AN210		08-21-2007	09-07-2007	19:59	HRH	0051S	PAX	315S	BRI			INTERNATIONAL TRANSPORTATION&amp;TRADING	1	CTL	KHA		09-07-2007	
+
+sheet DailyReportSL_Exp2
+bai	hangtau	chukt	socont	kichco	trangthai	trongluong	pa	solenh	soseal	ngtinhluu	ngthuchien	gio	taun	chuyenn	taux	chuyenx	cang	imo	dkienha	tenkh	huong	giao	nhan	ghichu	job_date	
+CTL	CHI	???	CAXU 3357037	2200	FL	4.3000	HBCX	8SGNHAM4AM883	G422730	09-07-2007	09-07-2007	16:51			REV	0750	HAM			SAGAWA EXPRESS	3	KHA	CTL		09-07-2007	
+TCA	CHI	???	CAXU 8064828	4500	FL	12.7000	HBCX	HOATL4W1543	G430345	09-07-2007	09-07-2007	14:5			MTC	40N	ATL			cty tnhh KEC VN	3	KHA	TCA		09-07-2007	
+CTL	CHI	CSC	CCLU 1017669	2230	MT	0.0000	NHAR			09-07-2007	09-07-2007	19:29									3	KHA	CTL	(Ko CAM DIEN)@CoNeThXDQ	09-07-2007	
+
+Phuc long :
+file IN:
+												
+PHUC LONG JOINT-STOCK												
+ICD PHUC LONG												
+BAO CAO NHAP CONTAINER RONG												
+			Töø ngaøy 07/09/2007 07:30   Ñeán ngaøy 08/09/2007 07:30									
+												
+Stt	Container	Size	Line	Ngay NB	Khach hang		ST	So xe		Ghi chu	DP	
+1	CCLU 4501532	4200	CHI	07/09/2007 09:05	KUEHNE		A	57K9792	cu set		DP1	
+2	CCLU 6045600	4500	CHI	07/09/2007 10:33	CHINAM		B	57H5184	RUA		DP1	
+3	CCLU 6027778	4500	CHI	07/09/2007 11:22	NGHE TAI		A	57K4333	BT		DP1	
+4	CCLU 4739290	4200	CHI	07/09/2007 13:16	AMASCO		A	57H9626	BT		DP1	
+5	CCLU 6503853	4500	CHI	07/09/2007 13:36	YUNG SHING LUNG		A	57L0107	QUET		DP1	
+6	CCLU 6606872	4500	CHI	07/09/2007 13:40	SUPER STAR		B	4638	rach joan cp 5cm		DP1	
+7	CCLU 4941125	4200	CHI	07/09/2007 16:33	XIN RONG ARTS		A	57K9927	BT		DP1	
+8	CCLU 6170829	4500	CHI	07/09/2007 17:09	YUNG SHING LUNG		C	57K9862	phinh :v/phai(80x60x5)cm+v/trai(100x80x5)cm-- (da thu s/chua)		DP1	
+9	GESU 5178880	4500	CHI	07/09/2007 19:22	NGHE TAI		A	57K4333	OK		DP1	
+10	CCLU 6873082	4500	CHI	07/09/2007 19:34	CHINA SHIPPING		A	57K5675	OK-		DP1	
+11	CCLU 6927152	4500	CHI	07/09/2007 20:10	CHINA SHIPPING		A	57K8971	ok		DP1	
+12	CCLU 4227376	4200	CHI	07/09/2007 21:40	XIN RONG ARTS		A	57L9927	BT		DP1	
+13	CCLU 7075180	4500	CHI	07/09/2007 23:14	CHINA SHIPPING		A	57K8918	ok		DP1	
+14	TGHU 4155219	4200	CHI	08/09/2007 03:12	GOLD ROAST		C	72M5688	cu set, phinh vach phai 100*50*7cm,da thu sua chua		DP1	
+15	GLDU 7119862	4500	CHI	08/09/2007 03:23	GIANG LI		B	57L1903	rua		DP1	
+
+file OUT:
+																
+PHUC LONG JOINT-STOCK																
+ICD PHUC LONG																
+BAO CAO CAP CONTAINER RONG																
+						Tu ngay 07/09/2007 07:30  Den ngay 08/09/2007 07:30										
+																
+Stt	So Container	Size	Line	Ngay NB		Ngaøy TH		Khach hang		Booking	Tau/chuyen	Cang den	So xe	Ghi chuù	DP	
+1	CCLU 6431820	4500	CHI	18-08-2007 0:00		07/09/2007 08:16		GES		HODFW4W1343R	MATTHIAS CLAUDIUS/0040N		60M1661	rua bot than den	DP1	
+2	FSCU 6421053	4500	CHI	01-09-2007 0:00		07/09/2007 08:59		NGHI GIA MY		HOKCK4W1521	MATTHIAS CLAUDIUS/0040N		60M0068	quet	DP1	
+3	CCLU 6691262	4500	CHI	01-09-2007 0:00		07/09/2007 09:26		DHL GLOBAL		HOLGB4W1696D001	MARTRAVELLER/040N		1136	rua dat	DP2	
+4	GESU 5313281	4500	CHI	06-09-2007 0:00		07/09/2007 10:35		GOLDEN		8SGNBEL4AM939	REVERENCE/0750		57K6748	BT	DP1	
+5	CCLU 6456345	4500	CHI	01-09-2007 0:00		07/09/2007 11:16		TRANSIMEX		8SGNRTM4AM398FR1	REVERENCE/750		0252	rua dat	DP2	
+6	CCLU 6547595	4500	CHI	06-09-2007 0:00		07/09/2007 11:17		DSV AIR		HOMSP4W1837				BT	DP1	
+7	CCLU 6593986	4500	CHI	06-09-2007 0:00		07/09/2007 13:09		AAN BOORD CARGO		8SGNFXT4AM923	REVERENCE/0750		57K2782	QUET	DP1	
+8	INKU 6295050	4500	CHI	05-09-2007 0:00		07/09/2007 13:13		NYK LOG		HOHOU4W1674	MATTHIAS CLAUDIUS/0040N		53LD0014	bt	DP1	
+9	CCLU 6352063	4500	CHI	05-09-2007 0:00		07/09/2007 15:31		THANH PHU		HODFW4W1853	MATTHIAS CLAUDIUS/0040N		60M1428	quet	DP1	
+10	CCLU 6313880	4500	CHI	05-09-2007 0:00		07/09/2007 15:33		THANH PHU		HODFW4W1853	MATTHIAS CLAUDIUS/0040N		9207	quet	DP1	
+11	CCLU 6474396	4500	CHI	05-09-2007 0:00		07/09/2007 15:35		SCHENKER		HOKCK4W1844	MATTHIAS CLAUDIUS/0040N		57L0779	quet	DP1	
+12	CCLU 6723230	4500	CHI	05-09-2007 0:00		07/09/2007 15:36		MAERSK LOGISTICS		HOTAM4W1835	MATTHIAS CLAUDIUS/0040N		60L5089	BT	DP1	
+13	CCLU 7111517	4500	CHI	05-09-2007 0:00		07/09/2007 16:19		DSV AIR &amp; SEA		HOMSP4W2349	MATTHIAS CLAUDIUS/0040N		61N1528	BT	DP1	
+14	TRLU 6659991	4500	CHI	01-09-2007 0:00		07/09/2007 19:08		ACT		8SGNRTM4AN747	REVERENCE/0750		57K6785	DA S/CHUA 07/09)--cong 1 cay thanh bar cua 70*5,rua bot(co' bb hang tau sua)	DP1	
+15	CCLU 6304363	4500	CHI	06-09-2007 0:00		07/09/2007 19:13		PANALPINA		HOCHI4W1487	MATTHIAS CLAUDIUS/0040N		57K8864	BT	DP1	
+16	CCLU 6027778	4500	CHI	07-09-2007 0:00		07/09/2007 21:24		HO NAI 2.		HOBNV4W1769	MATTHIAS CLAUDIUS		57K7221	BT	DP1	
+17	CCLU 6873082	4500	CHI	07-09-2007 0:00		07/09/2007 21:58		SUN VIET NAM		HOLAX4W1764	MATTHIAS CLAUDIUS/0040N		57L1568	OK-	DP1	
+18	CCLU 6695041	4500	CHI	07-09-2007 0:00		07/09/2007 22:00		GES		HOHOU4W1452D002	MATTHIAS CLAUDIUS/0040N		60M2261	BT	DP1	
+19	GESU 5178880	4500	CHI	07-09-2007 0:00		07/09/2007 22:57		TWT		HOLGB4W1699-P1	MATTHIAS CLAUDIUS/0040N		60M4676	OK	DP1	
+20	CCLU 6606872	4500	CHI	07-09-2007 0:00		08/09/2007 01:57		SANGSHUN		HOCHIW1488	MATTHIAS CLAUDIUS		57K7317	rach joan cp 5cm	DP1	
+21	CCLU 6503853	4500	CHI	07-09-2007 0:00		08/09/2007 03:45		TWT		HOLGB4W1699-P2	MATTHIAS CLAUDIUS/0040N		57H8832	QUET	DP1	
+22	CCLU 7075180	4500	CHI	07-09-2007 0:00		08/09/2007 03:58		GES		HOHÂUW1342R	MATTHIAS CLAUDIUS/0040N		60L2592	ok	DP1	
+23	CCLU 6927152	4500	CHI	07-09-2007 0:00		08/09/2007 04:21		VIHATRANS		8SGNFXT4AM409	REVERENCE/0750		57H7648	ok	DP1	
+</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        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
+</value>
+  </data>
+</root>

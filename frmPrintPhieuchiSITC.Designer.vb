@@ -1,0 +1,92 @@
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+Partial Class frmPrintPhieuchiSITC
+    Inherits System.Windows.Forms.Form
+
+    'Form overrides dispose to clean up the component list.
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+        Try
+            If disposing AndAlso components IsNot Nothing Then
+                components.Dispose()
+            End If
+        Finally
+            MyBase.Dispose(disposing)
+        End Try
+    End Sub
+
+    'Required by the Windows Form Designer
+    Private components As System.ComponentModel.IContainer
+
+    'NOTE: The following procedure is required by the Windows Form Designer
+    'It can be modified using the Windows Form Designer.  
+    'Do not modify it using the code editor.
+    <System.Diagnostics.DebuggerStepThrough()> _
+    Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmPrintPhieuchiSITC))
+        Me.Button2 = New System.Windows.Forms.Button
+        Me.Button1 = New System.Windows.Forms.Button
+        Me.CHKHCM = New System.Windows.Forms.RadioButton
+        Me.chkhp = New System.Windows.Forms.RadioButton
+        Me.SuspendLayout()
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(197, 12)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(75, 23)
+        Me.Button2.TabIndex = 13
+        Me.Button2.Text = "Exit"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(116, 12)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 12
+        Me.Button1.Text = "Print"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'CHKHCM
+        '
+        Me.CHKHCM.AutoSize = True
+        Me.CHKHCM.Checked = True
+        Me.CHKHCM.Location = New System.Drawing.Point(12, 12)
+        Me.CHKHCM.Name = "CHKHCM"
+        Me.CHKHCM.Size = New System.Drawing.Size(49, 17)
+        Me.CHKHCM.TabIndex = 14
+        Me.CHKHCM.TabStop = True
+        Me.CHKHCM.Text = "HCM"
+        Me.CHKHCM.UseVisualStyleBackColor = True
+        '
+        'chkhp
+        '
+        Me.chkhp.AutoSize = True
+        Me.chkhp.Location = New System.Drawing.Point(12, 35)
+        Me.chkhp.Name = "chkhp"
+        Me.chkhp.Size = New System.Drawing.Size(40, 17)
+        Me.chkhp.TabIndex = 15
+        Me.chkhp.Text = "HP"
+        Me.chkhp.UseVisualStyleBackColor = True
+        '
+        'frmPrintPhieuchiSITC
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.ClientSize = New System.Drawing.Size(284, 62)
+        Me.Controls.Add(Me.chkhp)
+        Me.Controls.Add(Me.CHKHCM)
+        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.Button1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Name = "frmPrintPhieuchiSITC"
+        Me.Text = "Cash Loan SITC"
+        Me.ResumeLayout(False)
+        Me.PerformLayout()
+
+    End Sub
+    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents CHKHCM As System.Windows.Forms.RadioButton
+    Friend WithEvents chkhp As System.Windows.Forms.RadioButton
+End Class
