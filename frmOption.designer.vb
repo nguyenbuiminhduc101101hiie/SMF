@@ -20,40 +20,40 @@ Partial Class frmOption
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmOption))
-        Me.fraUpdate = New System.Windows.Forms.GroupBox
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.cboFra = New System.Windows.Forms.ComboBox
-        Me.cboBackG = New System.Windows.Forms.ComboBox
-        Me.cmdCancel = New System.Windows.Forms.Button
-        Me.cmdOk = New System.Windows.Forms.Button
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.txtOptionValue = New System.Windows.Forms.TextBox
-        Me.txtCode = New System.Windows.Forms.TextBox
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.txtName = New System.Windows.Forms.TextBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.dgdOption = New System.Windows.Forms.DataGridView
-        Me.OptionID = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.frmName = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.Department = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.OptionCode = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.OptionName = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.OptionValue = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.Continued = New System.Windows.Forms.DataGridViewCheckBoxColumn
-        Me.Editable = New System.Windows.Forms.DataGridViewCheckBoxColumn
-        Me.Approve = New System.Windows.Forms.DataGridViewCheckBoxColumn
-        Me.UserID = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.UpdateTime = New System.Windows.Forms.DataGridViewTextBoxColumn
-        Me.MenuStrip = New System.Windows.Forms.MenuStrip
-        Me.smnuSearch = New System.Windows.Forms.ToolStripMenuItem
-        Me.smnuAdd = New System.Windows.Forms.ToolStripMenuItem
-        Me.smnuEdit = New System.Windows.Forms.ToolStripMenuItem
-        Me.smnuDelete = New System.Windows.Forms.ToolStripMenuItem
-        Me.ExportExcelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.smnuExit = New System.Windows.Forms.ToolStripMenuItem
-        Me.ColorDialog1 = New System.Windows.Forms.ColorDialog
-        Me.FontDialog1 = New System.Windows.Forms.FontDialog
+        Me.fraUpdate = New System.Windows.Forms.GroupBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.cboFra = New System.Windows.Forms.ComboBox()
+        Me.cboBackG = New System.Windows.Forms.ComboBox()
+        Me.cmdCancel = New System.Windows.Forms.Button()
+        Me.cmdOk = New System.Windows.Forms.Button()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtOptionValue = New System.Windows.Forms.TextBox()
+        Me.txtCode = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.txtName = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.dgdOption = New System.Windows.Forms.DataGridView()
+        Me.OptionID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.frmName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Department = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OptionCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OptionName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OptionValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Continued = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Editable = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Approve = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.UserID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UpdateTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MenuStrip = New System.Windows.Forms.MenuStrip()
+        Me.smnuSearch = New System.Windows.Forms.ToolStripMenuItem()
+        Me.smnuAdd = New System.Windows.Forms.ToolStripMenuItem()
+        Me.smnuEdit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.smnuDelete = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportExcelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.smnuExit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
+        Me.FontDialog1 = New System.Windows.Forms.FontDialog()
         Me.fraUpdate.SuspendLayout()
         CType(Me.dgdOption, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip.SuspendLayout()
@@ -62,8 +62,8 @@ Partial Class frmOption
         'fraUpdate
         '
         Me.fraUpdate.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.fraUpdate.Controls.Add(Me.Label5)
         Me.fraUpdate.Controls.Add(Me.Label3)
         Me.fraUpdate.Controls.Add(Me.cboFra)
@@ -154,8 +154,8 @@ Partial Class frmOption
         'txtOptionValue
         '
         Me.txtOptionValue.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtOptionValue.Location = New System.Drawing.Point(92, 71)
         Me.txtOptionValue.Multiline = True
         Me.txtOptionValue.Name = "txtOptionValue"
@@ -300,7 +300,6 @@ Partial Class frmOption
         Me.smnuAdd.Name = "smnuAdd"
         Me.smnuAdd.Size = New System.Drawing.Size(43, 20)
         Me.smnuAdd.Text = "New"
-        Me.smnuAdd.Visible = False
         '
         'smnuEdit
         '
