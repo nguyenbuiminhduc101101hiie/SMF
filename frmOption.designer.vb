@@ -21,6 +21,10 @@ Partial Class frmOption
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmOption))
         Me.fraUpdate = New System.Windows.Forms.GroupBox()
+        Me.txtdepartment = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtfrmname = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.cboFra = New System.Windows.Forms.ComboBox()
@@ -64,6 +68,10 @@ Partial Class frmOption
         Me.fraUpdate.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.fraUpdate.Controls.Add(Me.txtdepartment)
+        Me.fraUpdate.Controls.Add(Me.Label7)
+        Me.fraUpdate.Controls.Add(Me.txtfrmname)
+        Me.fraUpdate.Controls.Add(Me.Label6)
         Me.fraUpdate.Controls.Add(Me.Label5)
         Me.fraUpdate.Controls.Add(Me.Label3)
         Me.fraUpdate.Controls.Add(Me.cboFra)
@@ -82,10 +90,43 @@ Partial Class frmOption
         Me.fraUpdate.TabIndex = 5
         Me.fraUpdate.TabStop = False
         '
+        'txtdepartment
+        '
+        Me.txtdepartment.Location = New System.Drawing.Point(431, 19)
+        Me.txtdepartment.Name = "txtdepartment"
+        Me.txtdepartment.Size = New System.Drawing.Size(96, 20)
+        Me.txtdepartment.TabIndex = 10
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(359, 22)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(68, 13)
+        Me.Label7.TabIndex = 9
+        Me.Label7.Text = "Department :"
+        '
+        'txtfrmname
+        '
+        Me.txtfrmname.BackColor = System.Drawing.SystemColors.InactiveCaption
+        Me.txtfrmname.Location = New System.Drawing.Point(92, 22)
+        Me.txtfrmname.Name = "txtfrmname"
+        Me.txtfrmname.Size = New System.Drawing.Size(256, 20)
+        Me.txtfrmname.TabIndex = 8
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(12, 25)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(65, 13)
+        Me.Label6.TabIndex = 7
+        Me.Label6.Text = "*Frm Name :"
+        '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(371, 22)
+        Me.Label5.Location = New System.Drawing.Point(390, 49)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(39, 13)
         Me.Label5.TabIndex = 6
@@ -94,7 +135,7 @@ Partial Class frmOption
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(203, 22)
+        Me.Label3.Location = New System.Drawing.Point(557, 49)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(46, 13)
         Me.Label3.TabIndex = 5
@@ -107,7 +148,7 @@ Partial Class frmOption
         Me.cboFra.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboFra.FormattingEnabled = True
         Me.cboFra.IntegralHeight = False
-        Me.cboFra.Location = New System.Drawing.Point(412, 18)
+        Me.cboFra.Location = New System.Drawing.Point(431, 45)
         Me.cboFra.Name = "cboFra"
         Me.cboFra.Size = New System.Drawing.Size(96, 21)
         Me.cboFra.TabIndex = 4
@@ -119,7 +160,7 @@ Partial Class frmOption
         Me.cboBackG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboBackG.FormattingEnabled = True
         Me.cboBackG.IntegralHeight = False
-        Me.cboBackG.Location = New System.Drawing.Point(251, 18)
+        Me.cboBackG.Location = New System.Drawing.Point(605, 45)
         Me.cboBackG.Name = "cboBackG"
         Me.cboBackG.Size = New System.Drawing.Size(99, 21)
         Me.cboBackG.TabIndex = 3
@@ -145,7 +186,7 @@ Partial Class frmOption
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(15, 74)
+        Me.Label4.Location = New System.Drawing.Point(12, 99)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(74, 13)
         Me.Label4.TabIndex = 0
@@ -156,23 +197,23 @@ Partial Class frmOption
         Me.txtOptionValue.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtOptionValue.Location = New System.Drawing.Point(92, 71)
+        Me.txtOptionValue.Location = New System.Drawing.Point(92, 99)
         Me.txtOptionValue.Multiline = True
         Me.txtOptionValue.Name = "txtOptionValue"
-        Me.txtOptionValue.Size = New System.Drawing.Size(612, 153)
+        Me.txtOptionValue.Size = New System.Drawing.Size(612, 125)
         Me.txtOptionValue.TabIndex = 1
         '
         'txtCode
         '
-        Me.txtCode.Location = New System.Drawing.Point(92, 19)
+        Me.txtCode.Location = New System.Drawing.Point(92, 47)
         Me.txtCode.Name = "txtCode"
-        Me.txtCode.Size = New System.Drawing.Size(84, 20)
+        Me.txtCode.Size = New System.Drawing.Size(256, 20)
         Me.txtCode.TabIndex = 1
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(17, 22)
+        Me.Label2.Location = New System.Drawing.Point(12, 50)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(72, 13)
         Me.Label2.TabIndex = 0
@@ -180,7 +221,7 @@ Partial Class frmOption
         '
         'txtName
         '
-        Me.txtName.Location = New System.Drawing.Point(92, 45)
+        Me.txtName.Location = New System.Drawing.Point(92, 73)
         Me.txtName.Name = "txtName"
         Me.txtName.Size = New System.Drawing.Size(612, 20)
         Me.txtName.TabIndex = 1
@@ -188,7 +229,7 @@ Partial Class frmOption
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(16, 48)
+        Me.Label1.Location = New System.Drawing.Point(12, 76)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(73, 13)
         Me.Label1.TabIndex = 0
@@ -380,4 +421,8 @@ Partial Class frmOption
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents ColorDialog1 As System.Windows.Forms.ColorDialog
     Friend WithEvents FontDialog1 As System.Windows.Forms.FontDialog
+    Friend WithEvents txtfrmname As System.Windows.Forms.TextBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents txtdepartment As System.Windows.Forms.TextBox
+    Friend WithEvents Label7 As System.Windows.Forms.Label
 End Class

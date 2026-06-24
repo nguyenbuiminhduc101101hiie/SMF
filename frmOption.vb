@@ -121,7 +121,9 @@ Err_Renamed:
     '    End Sub
 
     Private Sub cmdOK_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdOk.Click
-        On Error GoTo Err_Renamed
+        Try
+
+       
         Dim strQuery, strOptionId, pName As String
         Dim rs As New ADODB.Recordset
         Dim index As Integer = 0
@@ -138,14 +140,24 @@ Err_Renamed:
                     .AddNew()
                     .Fields("OptionId").Value = NewId()
                 End If
-                strOptionId = .Fields("OptionId").Value
-
+                    strOptionId = .Fields("OptionId").Value
+                    .Fields("frmname").Value = UCase(Trim(Me.txtfrmname.Text))
+                    .Fields("department").Value = UCase(Trim(Me.txtdepartment.Text))
                 .Fields("OptionName").Value = UCase(Trim(Me.txtName.Text))
                 .Fields("OptionCode").Value = UCase(Trim(Me.txtCode.Text))
-                .Fields("OptionValue").Value = Me.txtOptionValue.Text
-                If UCase(Me.dgdOption.Item("frmname", index).Value) = "COLOR" Then
-                    .Fields("OptionValue").Value = Me.cboBackG.BackColor.ToArgb.ToString + "$" + Me.cboFra.BackColor.ToArgb.ToString
-                End If
+                    .Fields("OptionValue").Value = Me.txtOptionValue.Text
+                    .Fields("editable").Value = 1
+                    .Fields("approve").Value = 1
+                    .Fields("continued").Value = 1
+
+                    Try
+                        If UCase(Me.dgdOption.Item("frmname", index).Value) = "COLOR" Then
+                            .Fields("OptionValue").Value = Me.cboBackG.BackColor.ToArgb.ToString + "$" + Me.cboFra.BackColor.ToArgb.ToString
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+
                 '.Fields("Country").Value = UCase(Trim(Me.txtCountry.Text))
                 '.Fields("Continued").Value = 1
                 .Update()
@@ -188,9 +200,10 @@ Err_Renamed:
 
 
 
-        Exit Sub
-Err_Renamed:
-        MsgBox(msgErr(Me, Err.Description))
+        Catch ex As Exception
+            MsgBox(msgErr(Me, Err.Description))
+        End Try
+
         'Resume
     End Sub
 
@@ -744,6 +757,9 @@ Err_Renamed:
     Private Sub RefreshData(ByVal index As Integer)
         On Error GoTo Err_Renamed
         Dim oItems As PDSAListItemString
+        Me.txtfrmname.Text = Me.dgdOption.Item("frmname", index).Value.ToString
+        Me.txtdepartment.Text = Me.dgdOption.Item("department", index).Value.ToString
+
         Me.txtName.Text = Me.dgdOption.Item("OptionName", index).Value.ToString
         Me.txtCode.Text = Me.dgdOption.Item("OptionCode", index).Value '.ToString
         Me.txtOptionValue.Text = Me.dgdOption.Item("OptionValue", index).Value.ToString
