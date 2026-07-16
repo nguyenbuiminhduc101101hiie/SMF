@@ -308,6 +308,31 @@ Err_Renamed:
             '------------------------------
             Dim tong As Double = 0
             Dim tongthuho As Double = 0
+            Try
+                Dim companyaddress As Object
+                companyaddress = rptDoCument.ReportDefinition.ReportObjects("txtaddresscompany")
+                companyaddress.text = getOptionValue_name("ADDRESSCOMPANY")
+
+            Catch ex As Exception
+
+            End Try
+
+            Try
+                Dim companytelfax As Object
+                companytelfax = rptDoCument.ReportDefinition.ReportObjects("txttelcompany")
+                companytelfax.text = getOptionValue_name("TELCOMPANY")
+            Catch ex As Exception
+
+            End Try
+
+            Try
+                Dim companywebmail As Object
+                companywebmail = rptDoCument.ReportDefinition.ReportObjects("txtemailcompany")
+                companywebmail.text = getOptionValue_name("EMAILCOMPANY")
+
+            Catch ex As Exception
+
+            End Try
             'Formatting paper'-----------------
             '------------------------------
             ' lay ten tu ginboundcusid

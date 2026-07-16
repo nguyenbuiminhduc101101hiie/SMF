@@ -130,8 +130,8 @@ Public Class frmOutbound
             'loadDataToObject(Me.cboConsignee, strQuery, id, value)
 
             id = "customer_id"
-            value = "customer_"
-            strQuery = "Select customer_id,company + '-' + Addresstiengviet as customer_ from customer where CONTINUED=1 Order by company "
+            value = "company"
+            strQuery = "Select customer_id,company + '-' + taxcode as company from customer where CONTINUED=1 Order by company "
             loadDataToObject(Me.cboConsignee, strQuery, id, value)
 
 
@@ -149,7 +149,7 @@ Public Class frmOutbound
 
             id = "customer_id"
             value = "company"
-            strQuery = "Select customer_id,company + '-' + taxcode as company from customer where CONTINUED=1 Order by company "
+            strQuery = "Select customer_id,shortname as company from customer where CONTINUED=1 Order by company "
             Me.cbocusdebit.Items.Clear()
             Me.cbocuscredit.Items.Clear()
             Me.cboCustomer.Items.Clear()

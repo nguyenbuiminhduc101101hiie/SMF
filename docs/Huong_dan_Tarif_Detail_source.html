@@ -1,0 +1,191 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Hướng dẫn Tarif Detail</title>
+<!--[if gte mso 9]><xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+</w:WordDocument>
+</xml><![endif]-->
+<style>
+body { font-family: "Times New Roman", serif; font-size: 13pt; line-height: 1.5; margin: 2cm; }
+h1 { text-align: center; font-size: 18pt; color: #1F4E79; }
+h2 { font-size: 14pt; color: #2E75B6; border-bottom: 1px solid #2E75B6; padding-bottom: 4px; margin-top: 20px; }
+h3 { font-size: 13pt; color: #404040; }
+table { border-collapse: collapse; width: 100%; margin: 10px 0 16px 0; }
+th { background: #D9E2F3; border: 1px solid #8EA9DB; padding: 6px 8px; text-align: left; font-weight: bold; }
+td { border: 1px solid #BFBFBF; padding: 6px 8px; vertical-align: top; }
+.note { font-style: italic; color: #404040; }
+.bold { font-weight: bold; }
+ul { margin-top: 6px; }
+li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<h1>HƯỚNG DẪN SỬ DỤNG</h1>
+<h1 style="font-size:14pt; border:none;">Chức năng Tarif Detail<br>(frmTarifDetailInput &amp; frmTarifDetailEdit)</h1>
+
+<p>Tài liệu hướng dẫn quản lý chi tiết phí Tarif trong hệ thống SMF.</p>
+
+<h2>1. Tổng quan</h2>
+<p>Hai form <b>frmTarifDetailInput</b> và <b>frmTarifDetailEdit</b> dùng để quản lý <b>chi tiết phí (Detail)</b> trong bảng <b>Deatail_Tarif</b>, gắn với <b>Header Tarif</b> (<b>Header_Tarif</b>). Dữ liệu này được sử dụng khi bấm nút <b>Get</b> trên màn hình Inbound (Debit/Credit) để tạo phí tự động.</p>
+
+<h2>2. Truy cập chức năng</h2>
+<table>
+<tr><th>Bước</th><th>Thao tác</th></tr>
+<tr><td>1</td><td>Vào menu <b>Report → 19. Tarif Header</b></td></tr>
+<tr><td>2</td><td>Mở form <b>Tarif Header</b> (lưới trên: Header, lưới dưới: Detail)</td></tr>
+<tr><td>3</td><td>Click chọn một Header ở lưới trên</td></tr>
+<tr><td>4</td><td>Chọn menu tương ứng ở thanh menu</td></tr>
+</table>
+
+<table>
+<tr><th>Menu</th><th>Form mở ra</th><th>Mục đích</th></tr>
+<tr><td><b>New Details</b></td><td>frmTarifDetailInput</td><td>Thêm mới nhiều dòng chi tiết</td></tr>
+<tr><td><b>Edit Detail</b></td><td>frmTarifDetailEdit</td><td>Sửa một dòng chi tiết đã có</td></tr>
+<tr><td><b>Double-click dòng Detail</b></td><td>frmTarifDetailEdit</td><td>Sửa nhanh</td></tr>
+</table>
+<p class="note">Lưu ý: Phải chọn Header trước. Nếu chưa chọn Header, menu New Details sẽ bị khóa.</p>
+
+<h2>3. frmTarifDetailInput — Thêm chi tiết Tarif mới</h2>
+<p><b>Tiêu đề form:</b> New Tarif Details</p>
+<p>Thanh trên hiển thị: <b>Header: [Tên] | Customer: [Khách hàng] | Type: Debit/Credit</b></p>
+<p class="bold">Quy trình: Nhập thông tin 1 dòng → + Add to List → Lặp lại → Save All</p>
+
+<table>
+<tr><th>Bước</th><th>Thao tác</th></tr>
+<tr><td>1</td><td>Nhập thông tin từng dòng phí ở vùng <b>Enter Detail Row</b></td></tr>
+<tr><td>2</td><td>Bấm <b>+ Add to List</b> — dòng được thêm vào lưới <b>Pending Details</b></td></tr>
+<tr><td>3</td><td>Lặp lại để thêm nhiều dòng</td></tr>
+<tr><td>4</td><td>Bấm <b>Save All</b> để ghi tất cả vào database</td></tr>
+<tr><td>5</td><td>Hoặc <b>Close</b> để thoát (có cảnh báo nếu còn dòng chưa lưu)</td></tr>
+</table>
+
+<table>
+<tr><th>Nút</th><th>Chức năng</th></tr>
+<tr><td><b>+ Add to List</b></td><td>Thêm dòng hiện tại vào lưới tạm, xóa trắng form để nhập dòng tiếp</td></tr>
+<tr><td><b>Remove Row</b></td><td>Xóa dòng đang chọn khỏi lưới tạm (chưa lưu DB)</td></tr>
+<tr><td><b>Save All</b></td><td>Lưu toàn bộ lưới tạm vào Deatail_Tarif</td></tr>
+<tr><td><b>Close</b></td><td>Đóng form; hỏi xác nhận nếu còn dòng chưa lưu</td></tr>
+</table>
+
+<h2>4. frmTarifDetailEdit — Sửa chi tiết Tarif</h2>
+<p><b>Tiêu đề form:</b> Edit Tarif Detail</p>
+<table>
+<tr><th>Bước</th><th>Thao tác</th></tr>
+<tr><td>1</td><td>Form tự động load dữ liệu dòng đang chọn</td></tr>
+<tr><td>2</td><td>Chỉnh sửa các trường cần thiết</td></tr>
+<tr><td>3</td><td>Bấm <b>Save</b> để cập nhật database</td></tr>
+<tr><td>4</td><td>Hoặc <b>Cancel</b> để hủy, không lưu</td></tr>
+</table>
+
+<h2>5. Mô tả các trường nhập liệu</h2>
+<table>
+<tr><th>Trường trên form</th><th>Cột DB</th><th>Bắt buộc</th><th>Ghi chú</th></tr>
+<tr><td>Item</td><td>itemid</td><td>Có</td><td>Chọn mã phí từ danh mục Charge (Mã/ĐVT/Tên phí)</td></tr>
+<tr><td>Currency</td><td>currency</td><td>Có</td><td>Loại tiền (USD, VND, …)</td></tr>
+<tr><td>Unit</td><td>unit</td><td>Không</td><td>Đơn vị tính (BL, KGS, SET, …)</td></tr>
+<tr><td>Qty</td><td>qty</td><td>Không</td><td>Số lượng</td></tr>
+<tr><td>Unit Price</td><td>unitprice</td><td>Không</td><td>Đơn giá trước thuế</td></tr>
+<tr><td>Total Amount</td><td>totalamount</td><td>Tự động</td><td>= Qty × Unit Price</td></tr>
+<tr><td>VAT%</td><td>vat</td><td>Không</td><td>Phần trăm thuế VAT</td></tr>
+<tr><td>Unit Price Inc VAT</td><td>unitprice_incvat</td><td>Tự động</td><td>= Unit Price × (1 + VAT% / 100)</td></tr>
+<tr><td>Tigia</td><td>tigia</td><td>Không</td><td>Tỉ giá quy đổi (quan trọng khi dùng Get trên Inbound)</td></tr>
+</table>
+
+<h2>6. Tính toán tự động</h2>
+<p>Khi thay đổi <b>Qty</b>, <b>Unit Price</b> hoặc <b>VAT%</b>, hệ thống tự động tính:</p>
+<ul>
+<li><b>Total Amount</b> = Qty × Unit Price</li>
+<li><b>Unit Price Inc VAT</b> = Unit Price × (1 + VAT% / 100)</li>
+</ul>
+<p class="note">Hai trường này chỉ đọc (màu xám), không nhập tay.</p>
+
+<h2>7. Kiểm tra dữ liệu</h2>
+<ul>
+<li><b>Item</b> phải chọn hợp lệ từ danh sách</li>
+<li><b>Currency</b> không được để trống</li>
+<li>Khi <b>Save All</b> (form Input): phải có ít nhất 1 dòng trong lưới tạm</li>
+</ul>
+
+<h2>8. Cấu trúc dữ liệu lưu trữ</h2>
+<h3>Header (Header_Tarif) — tạo ở form Tarif Header</h3>
+<table>
+<tr><th>Cột</th><th>Ý nghĩa</th></tr>
+<tr><td>Name</td><td>Tên bộ Tarif</td></tr>
+<tr><td>customer_id</td><td>Khách hàng</td></tr>
+<tr><td>Type</td><td>Debit hoặc Credit</td></tr>
+<tr><td>usercreate, date</td><td>Người tạo, ngày tạo</td></tr>
+</table>
+
+<h3>Detail (Deatail_Tarif) — tạo/sửa ở 2 form này</h3>
+<table>
+<tr><th>Cột</th><th>Nguồn</th></tr>
+<tr><td>id_header</td><td>Header đang chọn</td></tr>
+<tr><td>itemid</td><td>Item</td></tr>
+<tr><td>currency, unit, qty</td><td>Nhập trên form</td></tr>
+<tr><td>unitprice, totalamount, vat, unitprice_incvat, tigia</td><td>Nhập / tự tính</td></tr>
+</table>
+
+<h2>9. Liên kết với Inbound (Debit / Credit)</h2>
+<p>Sau khi tạo xong Header + Detail:</p>
+<ol>
+<li>Vào <b>Inbound</b> (Sea hoặc Air Import)</li>
+<li>Chọn job inbound</li>
+<li>Tab <b>Debit</b> hoặc <b>Credit</b> → chọn <b>Header Tarif</b> tương ứng loại (Debit / Credit)</li>
+<li>Bấm <b>Get</b> (Button116 = Debit, Button117 = Credit)</li>
+</ol>
+
+<p class="bold">Mapping dữ liệu khi import:</p>
+<table>
+<tr><th>Tarif</th><th>Inbound Freight</th></tr>
+<tr><td>customer_id (Header)</td><td>customerid</td></tr>
+<tr><td>itemid</td><td>itemid</td></tr>
+<tr><td>currency</td><td>currency</td></tr>
+<tr><td>unit</td><td>containertype</td></tr>
+<tr><td>qty</td><td>quantity</td></tr>
+<tr><td>unitprice</td><td>unitprice_</td></tr>
+<tr><td>unitprice_incvat</td><td>unitprice</td></tr>
+<tr><td>totalamount</td><td>price_, pricetruocthue</td></tr>
+<tr><td>vat</td><td>taxprice</td></tr>
+<tr><td>tigia</td><td>tigia</td></tr>
+</table>
+
+<h2>10. Ví dụ thực tế</h2>
+<p><b>Tạo Tarif Debit cho khách ABC — phí vận chuyển + phí xếp dỡ:</b></p>
+<ol>
+<li><b>Tarif Header → New Header</b>: Name = ABC - Debit chuẩn, Customer = ABC Logistics, Type = Debit → Save</li>
+<li>Chọn <b>Yes</b> khi hỏi "Do you want to add details now?"</li>
+<li><b>Dòng 1:</b> Item = FRT/KGS/Freight, Currency = USD, Unit = KGS, Qty = 100, Unit Price = 2.5, VAT% = 8, Tigia = 25400 → <b>+ Add to List</b></li>
+<li><b>Dòng 2:</b> Item = THC/BL/Terminal Handling, Currency = USD, Unit = BL, Qty = 1, Unit Price = 150, VAT% = 8, Tigia = 25400 → <b>+ Add to List</b></li>
+<li><b>Save All</b> → 2 dòng lưu vào Deatail_Tarif</li>
+<li>Trên <b>Inbound</b> → chọn Tarif "ABC - Debit chuẩn" → <b>Get</b> → 2 dòng debit được tạo</li>
+</ol>
+
+<h2>11. Lưu ý quan trọng</h2>
+<ul>
+<li><b>Type Header</b> (Debit / Credit) phải khớp với tab sử dụng trên Inbound</li>
+<li><b>New Details</b> cho phép thêm nhiều dòng một lần; <b>Edit Detail</b> chỉ sửa một dòng</li>
+<li>Xóa Header trên frmTarifHeader sẽ xóa <b>toàn bộ</b> Detail liên quan</li>
+<li>Bấm <b>Refresh</b> trên frmTarifHeader để cập nhật lưới sau khi lưu</li>
+<li>Dữ liệu Detail chưa <b>Save All</b> (form Input) sẽ <b>mất</b> nếu đóng form</li>
+<li>Nên nhập đầy đủ <b>Tigia</b> trong Tarif Detail để dữ liệu chính xác khi import sang Inbound</li>
+</ul>
+
+<h2>12. Tóm tắt nhanh</h2>
+<table>
+<tr><th>Tình huống</th><th>Form dùng</th><th>Hành động</th></tr>
+<tr><td>Thêm nhiều phí mới</td><td>frmTarifDetailInput</td><td>Add to List → Save All</td></tr>
+<tr><td>Sửa một phí đã có</td><td>frmTarifDetailEdit</td><td>Save</td></tr>
+<tr><td>Xem danh sách phí</td><td>frmTarifHeader</td><td>Chọn Header → xem lưới Detail</td></tr>
+<tr><td>Dùng Tarif trên job</td><td>Inbound</td><td>Chọn Header Tarif → Get</td></tr>
+</table>
+
+<p style="margin-top:30px; text-align:center; color:#808080; font-size:11pt;">SMF System — Tài liệu hướng dẫn Tarif Detail</p>
+
+</body>
+</html>

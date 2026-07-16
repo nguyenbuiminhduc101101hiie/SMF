@@ -41,7 +41,7 @@
     <PublisherName>FMS</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>909</ApplicationRevision>
+    <ApplicationRevision>914</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -2171,6 +2171,13 @@
     <Compile Include="Frm_MasterData.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Frm_MasterData_Config.Designer.vb">
+      <DependentUpon>Frm_MasterData_Config.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_MasterData_Config.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MasterDataExportHelper.vb" />
     <Compile Include="HKLogDataSet.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2937,6 +2944,18 @@
       <DependentUpon>frmICM.vb</DependentUpon>
     </Compile>
     <Compile Include="frmICM.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmImportAirImportJob.Designer.vb">
+      <DependentUpon>frmImportAirImportJob.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmImportAirImportJob.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmImportSeaImportJob.Designer.vb">
+      <DependentUpon>frmImportSeaImportJob.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmImportSeaImportJob.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmImportSchedule.designer.vb">
@@ -4383,6 +4402,30 @@
       <DependentUpon>frmStockOut.vb</DependentUpon>
     </Compile>
     <Compile Include="frmStockOut.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTarifDetailEdit.Designer.vb">
+      <DependentUpon>frmTarifDetailEdit.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmTarifDetailEdit.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTarifDetailInput.Designer.vb">
+      <DependentUpon>frmTarifDetailInput.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmTarifDetailInput.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTarifHeader.Designer.vb">
+      <DependentUpon>frmTarifHeader.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmTarifHeader.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTarifHeaderInput.Designer.vb">
+      <DependentUpon>frmTarifHeaderInput.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmTarifHeaderInput.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmTariffAirExport.Designer.vb">
@@ -6023,6 +6066,14 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmimportsalesurcharge.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmImportAirImportJob.resx">
+      <DependentUpon>frmImportAirImportJob.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmImportSeaImportJob.resx">
+      <DependentUpon>frmImportSeaImportJob.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmImportSchedule.resx">
       <DependentUpon>frmImportSchedule.vb</DependentUpon>
       <SubType>Designer</SubType>
@@ -7643,6 +7694,22 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmSupplyContainerOrder.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmTarifDetailEdit.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmTarifDetailEdit.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTarifDetailInput.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmTarifDetailInput.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTarifHeader.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmTarifHeader.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTarifHeaderInput.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmTarifHeaderInput.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmTariffAirExport.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmTariffAirExport.vb</DependentUpon>
@@ -7966,6 +8033,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_MasterData.resx">
       <DependentUpon>Frm_MasterData.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_MasterData_Config.resx">
+      <DependentUpon>Frm_MasterData_Config.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="help.resx">
       <DependentUpon>help.vb</DependentUpon>

@@ -103,8 +103,8 @@ Public Class frmInbound_OverseaAirImport
             'loadDataToObject(Me.cboConsignee, strQuery, id, value)
 
             id = "customer_id"
-            value = "customer_"
-            strQuery = "Select customer_id,company + '-' + Addresstiengviet as customer_ from customer where CONTINUED=1 Order by company "
+            value = "company"
+            strQuery = "Select customer_id,company + '-' + taxcode as company from customer where CONTINUED=1 Order by company "
             loadDataToObject(Me.cboConsignee, strQuery, id, value)
 
 
@@ -120,9 +120,21 @@ Public Class frmInbound_OverseaAirImport
             strQuery = "Select salecode from sale where CONTINUED=1 Order by salecode "
             loadDataToObject(Me.cboSale, strQuery, id, value)
 
+            id = "id"
+            value = "Name"
+            strQuery = "Select id, Name from Header_Tarif where type ='Debit' Order by Name "
+            Me.cbotarifheader.Items.Clear()
+            loadDataToObject(Me.cbotarifheader, strQuery, id, value)
+
+            id = "id"
+            value = "Name"
+            strQuery = "Select id, Name from Header_Tarif where type ='Credit' Order by Name "
+            Me.cbotarifheader_Credit.Items.Clear()
+            loadDataToObject(Me.cbotarifheader_Credit, strQuery, id, value)
+
             id = "customer_id"
             value = "company"
-            strQuery = "Select customer_id,taxcode + '-' + company as company from customer where CONTINUED=1 Order by company "
+            strQuery = "Select customer_id,shortname as company from customer where CONTINUED=1 Order by company "
             Me.cbocusdebit.Items.Clear()
             Me.cbocuscredit.Items.Clear()
             Me.cboCustomer.Items.Clear()
@@ -10160,6 +10172,103 @@ Err_Renamed:
         Catch ex As Exception
             DisplayMessage(True, ex.Message)
         End Try
+    End Sub
+
+    Private Sub ImportFreightFromTarif(ByVal tarifCombo As ComboBox, ByVal isDebit As Boolean)
+        Try
+            If mInboundID = "" Or mInboundID = DefaultValue Then
+                DisplayMessage(True, "Xin chọn inbound trước.")
+                Exit Sub
+            End If
+            If tarifCombo.Text.Trim = "" Then
+                DisplayMessage(True, "Xin chọn Header Tarif.")
+                tarifCombo.Focus()
+                Exit Sub
+            End If
+
+            Dim headerId As String = FindValueID(tarifCombo, tarifCombo.Text)
+            If headerId = "" Then
+                DisplayMessage(True, "Header Tarif không hợp lệ.")
+                Exit Sub
+            End If
+
+            Dim dsHeader As DataSet = ReadDataSet("Select customer_id From Header_Tarif Where id = '" & headerId.Replace("'", "''") & "'")
+            If dsHeader.Tables(0).Rows.Count = 0 Then
+                DisplayMessage(True, "Không tìm thấy Header Tarif.")
+                Exit Sub
+            End If
+            Dim customerId As String = dsHeader.Tables(0).Rows(0).Item("customer_id").ToString()
+
+            Dim dsDetail As DataSet = ReadDataSet("Select * From Deatail_Tarif Where id_header = '" & headerId.Replace("'", "''") & "'")
+            If dsDetail.Tables(0).Rows.Count = 0 Then
+                DisplayMessage(True, "Không có chi tiết trong Header Tarif này.")
+                Exit Sub
+            End If
+
+            If ConfirmMessage(True, "Tạo " & dsDetail.Tables(0).Rows.Count.ToString() & " phí từ Tarif?") <> MsgBoxResult.Ok Then Exit Sub
+
+            Dim rs As New ADODB.Recordset
+            rs.Open("Select * From inboundfreight", strconn, ADODB.CursorTypeEnum.adOpenDynamic, ADODB.LockTypeEnum.adLockOptimistic, ADODB.CommandTypeEnum.adCmdText)
+
+            Dim i As Integer
+            For i = 0 To dsDetail.Tables(0).Rows.Count - 1
+                Dim dr As DataRow = dsDetail.Tables(0).Rows(i)
+
+                rs.AddNew()
+                rs.Fields("inboundfreightID").Value = NewId()
+                rs.Fields("inboundID").Value = getID(mInboundID)
+                rs.Fields("customerid").Value = getID(customerId)
+                rs.Fields("debitcredit").Value = If(isDebit, "Debit", "Credit")
+                rs.Fields("itemid").Value = getID(dr.Item("itemid").ToString())
+                rs.Fields("currency").Value = dr.Item("currency").ToString()
+                rs.Fields("containertype").Value = dr.Item("unit").ToString()
+                rs.Fields("quantity").Value = dr.Item("qty").ToString()
+                rs.Fields("taxprice").Value = dr.Item("vat").ToString()
+                rs.Fields("tigia").Value = dr.Item("tigia").ToString()
+
+                Try
+                    rs.Fields("unitprice_").Value = dr.Item("unitprice").ToString()
+                Catch ex As Exception
+                End Try
+                Try
+                    rs.Fields("unitprice").Value = dr.Item("unitprice_incvat").ToString()
+                Catch ex As Exception
+                End Try
+                Try
+                    rs.Fields("price_").Value = dr.Item("totalamount").ToString()
+                Catch ex As Exception
+                End Try
+                Try
+                    rs.Fields("pricetruocthue").Value = dr.Item("totalamount").ToString()
+                Catch ex As Exception
+                End Try
+
+                rs.Update()
+            Next
+            rs.Close()
+
+            If isDebit Then
+                Me.Querydebit()
+            Else
+                Me.QueryCredit()
+            End If
+            profit()
+            DisplayMessage(True, "Đã tạo " & dsDetail.Tables(0).Rows.Count.ToString() & " phí.")
+        Catch ex As Exception
+            DisplayMessage(True, Err.Description)
+        End Try
+    End Sub
+
+    Private Sub Button117_Click(sender As Object, e As EventArgs) Handles Button117.Click
+        ImportFreightFromTarif(Me.cbotarifheader_Credit, False)
+    End Sub
+
+    Private Sub Button116_Click(sender As Object, e As EventArgs) Handles Button116.Click
+        ImportFreightFromTarif(Me.cbotarifheader, True)
+    End Sub
+
+    Private Sub Label58_Click(sender As Object, e As EventArgs) Handles Label58.Click
+
     End Sub
 
     Private Sub txtcurrcredit_Leave(sender As Object, e As EventArgs) Handles txtcurrcredit.Leave

@@ -31,8 +31,13 @@ Partial Class Frm_MasterData
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.btnConfigColumns = New System.Windows.Forms.Button()
         Me.prbExport = New System.Windows.Forms.ProgressBar()
         Me.lblProgress = New System.Windows.Forms.Label()
+        Me.grpCurrency = New System.Windows.Forms.GroupBox()
+        Me.rdoVND = New System.Windows.Forms.RadioButton()
+        Me.rdoUSD = New System.Windows.Forms.RadioButton()
+        Me.grpCurrency.SuspendLayout()
         Me.SuspendLayout()
         '
         'Y2
@@ -122,6 +127,15 @@ Partial Class Frm_MasterData
         Me.Button1.Text = "Export File"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'btnConfigColumns
+        '
+        Me.btnConfigColumns.Location = New System.Drawing.Point(546, 10)
+        Me.btnConfigColumns.Name = "btnConfigColumns"
+        Me.btnConfigColumns.Size = New System.Drawing.Size(110, 23)
+        Me.btnConfigColumns.TabIndex = 740
+        Me.btnConfigColumns.Text = "Thiết lập cột"
+        Me.btnConfigColumns.UseVisualStyleBackColor = True
+        '
         'prbExport
         '
         Me.prbExport.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -140,12 +154,47 @@ Partial Class Frm_MasterData
         Me.lblProgress.Size = New System.Drawing.Size(0, 13)
         Me.lblProgress.TabIndex = 739
         '
+        'grpCurrency
+        '
+        Me.grpCurrency.Controls.Add(Me.rdoVND)
+        Me.grpCurrency.Controls.Add(Me.rdoUSD)
+        Me.grpCurrency.Location = New System.Drawing.Point(23, 90)
+        Me.grpCurrency.Name = "grpCurrency"
+        Me.grpCurrency.Size = New System.Drawing.Size(180, 50)
+        Me.grpCurrency.TabIndex = 741
+        Me.grpCurrency.TabStop = False
+        Me.grpCurrency.Text = "Loại tiền xuất"
+        '
+        'rdoVND
+        '
+        Me.rdoVND.AutoSize = True
+        Me.rdoVND.Checked = True
+        Me.rdoVND.Location = New System.Drawing.Point(15, 20)
+        Me.rdoVND.Name = "rdoVND"
+        Me.rdoVND.Size = New System.Drawing.Size(48, 17)
+        Me.rdoVND.TabIndex = 0
+        Me.rdoVND.TabStop = True
+        Me.rdoVND.Text = "VND"
+        Me.rdoVND.UseVisualStyleBackColor = True
+        '
+        'rdoUSD
+        '
+        Me.rdoUSD.AutoSize = True
+        Me.rdoUSD.Location = New System.Drawing.Point(100, 20)
+        Me.rdoUSD.Name = "rdoUSD"
+        Me.rdoUSD.Size = New System.Drawing.Size(47, 17)
+        Me.rdoUSD.TabIndex = 1
+        Me.rdoUSD.Text = "USD"
+        Me.rdoUSD.UseVisualStyleBackColor = True
+        '
         'Frm_MasterData
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(725, 478)
+        Me.Controls.Add(Me.grpCurrency)
         Me.Controls.Add(Me.lblProgress)
+        Me.Controls.Add(Me.btnConfigColumns)
         Me.Controls.Add(Me.prbExport)
         Me.Controls.Add(Me.Y2)
         Me.Controls.Add(Me.T2)
@@ -158,7 +207,9 @@ Partial Class Frm_MasterData
         Me.Controls.Add(Me.Button1)
         Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.Name = "Frm_MasterData"
-        Me.Text = "Frm_MasterData"
+        Me.Text = "Master Data Export"
+        Me.grpCurrency.ResumeLayout(False)
+        Me.grpCurrency.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -173,6 +224,10 @@ Partial Class Frm_MasterData
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Button1 As Button
+    Friend WithEvents btnConfigColumns As Button
     Friend WithEvents prbExport As ProgressBar
     Friend WithEvents lblProgress As Label
+    Friend WithEvents grpCurrency As GroupBox
+    Friend WithEvents rdoVND As RadioButton
+    Friend WithEvents rdoUSD As RadioButton
 End Class
