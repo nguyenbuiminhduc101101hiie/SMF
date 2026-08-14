@@ -175,14 +175,12 @@ Public Class frmEManifest
                         End Try
 
 
-                        Dim cangchuyentai() As String
                         Dim canggiaohang() As String
                         Dim cangxephang() As String
                         Dim cangdohang() As String
                         Try
-                            cangchuyentai = ds.Tables(0).Rows(i).Item("cangchuyentai").ToString.Split("-")
-                            ws.Range("i" + CStr(tangct + bientang)).Value2 = cangchuyentai(0) ' code
-                            ' ws.Range("b11").Value2 = cangchuyentai(1) 'ds.Tables(0).Rows(i).Item("nguoiguihang").ToString
+                            ' Column I left blank intentionally
+                            ws.Range("i" + CStr(tangct + bientang)).Value2 = ""
                         Catch ex As Exception
 
                         End Try
@@ -222,7 +220,7 @@ Public Class frmEManifest
                             ws.Range("o" + CStr(tangct + bientang)).Value2 = "'" + ds.Tables(0).Rows(i).Item("sovandon").ToString '
 
                             Try
-                                ws.Range("p" + CStr(tangct + bientang)).Value2 = "'" + ds.Tables(0).Rows(i).Item("ngayPhatHanhVanDon").ToString.Replace("-", "/") '
+                                WriteEManifestDate(ws, "p", tangct + bientang, ds.Tables(0).Rows(i).Item("ngayPhatHanhVanDon"))
 
                             Catch ex As Exception
 
@@ -246,13 +244,13 @@ Public Class frmEManifest
                             End If
 
                             Try
-                                ws.Range("r" + CStr(tangct + bientang)).Value2 = "'" + ds.Tables(0).Rows(i).Item("ngayPhatHanhVanDongoc").ToString.Replace("-", "/") '
+                                WriteEManifestDate(ws, "r", tangct + bientang, ds.Tables(0).Rows(i).Item("ngayPhatHanhVanDongoc"))
 
                             Catch ex As Exception
 
                             End Try
                             Try
-                                ws.Range("s" + CStr(tangct + bientang)).Value2 = "'" + ds.Tables(0).Rows(i).Item("ngaykhoihanh").ToString.Replace("-", "/") '
+                                WriteEManifestDate(ws, "s", tangct + bientang, ds.Tables(0).Rows(i).Item("ngaykhoihanh"))
 
                             Catch ex As Exception
 
@@ -416,8 +414,10 @@ Public Class frmEManifest
 
 
                 '------------------------------
-                path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\SMF\" + hbl.Replace("\", "").Replace("/", "") + "_" & Now.Second & ".xlsx"
-                'End If
+                path = PromptEManifestSavePath(hbl)
+                If path = "" Then
+                    Return
+                End If
                 '------------------------------
                 Dim format1 As String
 
@@ -888,7 +888,10 @@ Public Class frmEManifest
             ' Dim path As String = ""
             'path = OpenDlg(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\SMF\" + hbl + "_" & Now.Second & ".xlsx")
             'If path = "" Then
-            path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\SMF\" + HBL.Replace("/", "_") + "_SOC" & Now.Second & ".xlsx"
+            path = PromptEManifestSavePath(HBL)
+            If path = "" Then
+                Return
+            End If
             'End If
             '------------------------------
             Dim format1 As String
@@ -1584,7 +1587,10 @@ Public Class frmEManifest
             ' Dim path As String = ""
             'path = OpenDlg(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments+ "\SMF\" + hbl + "_" & Now.Second & ".xlsx")
             'If path = "" Then
-            path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\SMF\_Danger_" + hbl + "_" & Now.Second & ".xlsx"
+            path = PromptEManifestSavePath(hbl)
+            If path = "" Then
+                Return
+            End If
             'End If
             '------------------------------
             Dim format1 As String
@@ -1899,7 +1905,10 @@ Public Class frmEManifest
             ' Dim path As String = ""
             'path = OpenDlg(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\SMF\" + hbl + "_" & Now.Second & ".xlsx")
             'If path = "" Then
-            path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\SMF\" + hbl + "_" & Now.Second & ".xlsx"
+            path = PromptEManifestSavePath(hbl)
+            If path = "" Then
+                Return
+            End If
             'End If
             '------------------------------
             Dim format1 As String
@@ -1932,6 +1941,127 @@ Public Class frmEManifest
             app.Quit()
         End Try
     End Sub
+
+    Private Const EManifestSaveFolderParmId As String = "frmEManifest.LastSaveFolder"
+
+    Private Function GetEManifestSaveFolder() As String
+        Dim defaultFolder As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SMF"
+        Try
+            If objUserSetting IsNot Nothing Then
+                Dim saved As String = CStr(objUserSetting.GetCParm(EManifestSaveFolderParmId, ""))
+                If saved IsNot Nothing AndAlso saved.Trim().Length > 0 AndAlso IO.Directory.Exists(saved) Then
+                    Return saved
+                End If
+            End If
+        Catch
+        End Try
+        Return defaultFolder
+    End Function
+
+    Private Sub SaveEManifestSaveFolder(ByVal folder As String)
+        Try
+            If objUserSetting Is Nothing OrElse folder Is Nothing OrElse folder.Trim().Length = 0 Then
+                Return
+            End If
+            objUserSetting.SetCParm(EManifestSaveFolderParmId, folder)
+            objUserSetting.SaveParm()
+        Catch
+        End Try
+    End Sub
+
+    Private Function PromptEManifestSavePath(ByVal hblNo As String) As String
+        Try
+            Dim safeHbl As String = ""
+            If hblNo IsNot Nothing Then
+                safeHbl = hblNo.Replace("\", "").Replace("/", "")
+            End If
+            Dim fileName As String = "MNF_" & safeHbl & ".xlsx"
+            Dim folder As String = GetEManifestSaveFolder()
+
+            If Not IO.Directory.Exists(folder) Then
+                Try
+                    IO.Directory.CreateDirectory(folder)
+                Catch
+                    folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                End Try
+            End If
+
+            Dim dlg As New SaveFileDialog()
+            dlg.InitialDirectory = folder
+            dlg.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+            dlg.FileName = fileName
+            dlg.OverwritePrompt = True
+
+            If dlg.ShowDialog(Me) <> DialogResult.OK Then
+                Return ""
+            End If
+
+            Dim selectedPath As String = dlg.FileName
+            SaveEManifestSaveFolder(IO.Path.GetDirectoryName(selectedPath))
+            Return selectedPath
+        Catch ex As Exception
+            MsgBox(ex.Message)
+            Return ""
+        End Try
+    End Function
+
+    Private Sub WriteEManifestDate(ByVal ws As _Worksheet, ByVal col As String, ByVal row As Integer, ByVal raw As Object)
+        Dim formatted As String = FormatEManifestDate(raw)
+        If formatted = "" Then
+            Return
+        End If
+        Dim rng As Range = ws.Range(col & row.ToString())
+        ' Force text so Excel template date format (dd/MMM/yyyy) cannot show JAN/FEB/...
+        rng.NumberFormat = "@"
+        rng.Value2 = formatted
+    End Sub
+
+    Private Function FormatEManifestDate(ByVal raw As Object) As String
+        Try
+            If raw Is Nothing OrElse IsDBNull(raw) Then
+                Return ""
+            End If
+
+            Dim d As Date
+            If TypeOf raw Is Date Then
+                Return CDate(raw).ToString("dd/MM/yyyy")
+            End If
+
+            Dim s As String = raw.ToString().Trim()
+            If s = "" Then
+                Return ""
+            End If
+
+            Dim months() As String = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"}
+            Dim normalized As String = s.ToUpperInvariant().Replace("-", "/")
+            For idx As Integer = 0 To 11
+                If normalized.IndexOf(months(idx), StringComparison.Ordinal) >= 0 Then
+                    Dim mm As String = (idx + 1).ToString().PadLeft(2, "0"c)
+                    normalized = normalized.Replace(months(idx), mm)
+                    Exit For
+                End If
+            Next
+
+            If Date.TryParseExact(normalized, New String() {"dd/MM/yyyy", "d/M/yyyy", "dd/M/yyyy", "d/MM/yyyy"}, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, d) Then
+                Return d.ToString("dd/MM/yyyy")
+            End If
+            If Date.TryParse(s, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.AllowWhiteSpaces, d) Then
+                Return d.ToString("dd/MM/yyyy")
+            End If
+            If Date.TryParse(s, d) Then
+                Return d.ToString("dd/MM/yyyy")
+            End If
+
+            Return normalized
+        Catch ex As Exception
+            Try
+                Return raw.ToString().Trim().ToUpperInvariant().Replace("-", "/").Replace("JAN", "01").Replace("FEB", "02").Replace("MAR", "03").Replace("APR", "04").Replace("MAY", "05").Replace("JUN", "06").Replace("JUL", "07").Replace("AUG", "08").Replace("SEP", "09").Replace("OCT", "10").Replace("NOV", "11").Replace("DEC", "12")
+            Catch
+                Return ""
+            End Try
+        End Try
+    End Function
+
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
         Try
             Me.Close()

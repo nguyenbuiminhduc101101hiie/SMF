@@ -104,7 +104,7 @@ Public Class frmInbound_OverseaAirImport
 
             id = "customer_id"
             value = "company"
-            strQuery = "Select customer_id,company + '-' + taxcode as company from customer where CONTINUED=1 Order by company "
+            strQuery = "Select customer_id,company as company from customer where CONTINUED=1 Order by company "
             loadDataToObject(Me.cboConsignee, strQuery, id, value)
 
 
@@ -238,7 +238,7 @@ Public Class frmInbound_OverseaAirImport
             ' load agent
             id = "customer_id"
             value = "company"
-            strQuery = "Select customer_id,taxcode + '-' + company as company from customer where CONTINUED=1 and maincode like '%agent%' Order by company "
+            strQuery = "Select customer_id,company as company from customer where CONTINUED=1 and maincode like '%agent%' Order by company "
             Me.cboAgent.Items.Clear()
 
             loadDataToObject(Me.cboAgent, strQuery, id, value)
@@ -381,11 +381,11 @@ Err_Renamed:
                 DisplayMessage(True, "ETA ?")
                 Exit Sub
             End If
-            If Me.cboitemSITC.Text = "" Then
-                DisplayMessage(True, "Items ?")
-                Me.cboitemSITC.Focus()
-                Exit Sub
-            End If
+            'If Me.cboitemSITC.Text = "" Then
+            '    DisplayMessage(True, "Items ?")
+            '    Me.cboitemSITC.Focus()
+            '    Exit Sub
+            'End If
 
             'If Me.txteta.Text.ToString.Trim.Length = 11 Then
             'Else

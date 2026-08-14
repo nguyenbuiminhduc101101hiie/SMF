@@ -24,16 +24,16 @@ Public Class Frm_MasterData
             lblProgress.Text = "Đang tải dữ liệu..."
             System.Windows.Forms.Application.DoEvents()
 
-            Dim sql_airimp As String = " select * from inbound_OverseaAirImport where CONVERT(DATETIME,datereport) between '" & NGAY1 & "' and '" & NGAY2 & "'"
+            Dim sql_airimp As String = " select * from inbound_OverseaAirImport where CONVERT(DATETIME,datereport) between '" & NGAY1 & "' and '" & NGAY2 & "'" & BuildNaturalHblOrderBy("MBL", "HBL")
             Dim ds_airimp As DataSet = ReadDataSet(sql_airimp)
 
-            Dim sql_airexp As String = " select * from Outbound_OverseaAirExport where CONVERT(DATETIME,datereport) between '" & NGAY1 & "' and '" & NGAY2 & "'"
+            Dim sql_airexp As String = " select * from Outbound_OverseaAirExport where CONVERT(DATETIME,datereport) between '" & NGAY1 & "' and '" & NGAY2 & "'" & BuildNaturalHblOrderBy("MBLCarrier", "HBLHAWB")
             Dim ds_airexp As DataSet = ReadDataSet(sql_airexp)
 
-            Dim sql_seaimp As String = " select * from inbound where CONVERT(DATETIME,datereport) between '" & NGAY1 & "' and '" & NGAY2 & "'"
+            Dim sql_seaimp As String = " select * from inbound where CONVERT(DATETIME,datereport) between '" & NGAY1 & "' and '" & NGAY2 & "'" & BuildNaturalHblOrderBy("MBL", "HBL")
             Dim ds_seaimp As DataSet = ReadDataSet(sql_seaimp)
 
-            Dim sql_seaexp As String = " select * from outbound where CONVERT(DATETIME,datereport) between '" & NGAY1 & "' and '" & NGAY2 & "'"
+            Dim sql_seaexp As String = " select * from outbound where CONVERT(DATETIME,datereport) between '" & NGAY1 & "' and '" & NGAY2 & "'" & BuildNaturalHblOrderBy("MBLCarrier", "HBLHAWB")
             Dim ds_seaexp As DataSet = ReadDataSet(sql_seaexp)
 
             Dim totalRows As Integer = GetRowCount(ds_airimp) + GetRowCount(ds_airexp) + GetRowCount(ds_seaimp) + GetRowCount(ds_seaexp)
@@ -165,5 +165,27 @@ Public Class Frm_MasterData
         End If
 
         Return ds.Tables(0).Rows.Count
+    End Function
+
+    Private Function BuildNaturalHblOrderBy(mblColumn As String, hblColumn As String) As String
+        ' Natural sort: PREFIX-1, PREFIX-3, PREFIX-10 (not PREFIX-1, PREFIX-10, PREFIX-3)
+        Return " order by " & BuildNaturalBillSortKey(mblColumn) &
+            ", " & BuildNaturalBillSortKey(hblColumn)
+    End Function
+
+    Private Function BuildNaturalBillSortKey(columnName As String) As String
+        Dim v As String = "ISNULL(" & columnName & ",'')"
+        Dim dashFromEnd As String = "CHARINDEX('-', REVERSE(" & v & "))"
+        Dim suffix As String = "RIGHT(" & v & ", " & dashFromEnd & " - 1)"
+        Dim hasNumericSuffix As String =
+            "(" & dashFromEnd & " > 1 AND ISNUMERIC(" & suffix & " + '.0e0') = 1)"
+
+        Return "CASE WHEN " & hasNumericSuffix &
+            " THEN LEFT(" & v & ", LEN(" & v & ") - " & dashFromEnd & ")" &
+            " ELSE " & v & " END ASC" &
+            ", CASE WHEN " & hasNumericSuffix &
+            " THEN CAST(" & suffix & " AS BIGINT)" &
+            " ELSE 0 END ASC" &
+            ", " & v & " ASC"
     End Function
 End Class

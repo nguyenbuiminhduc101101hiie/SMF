@@ -250,6 +250,21 @@ Public Class frmImportAirImportJob
         Return ""
     End Function
 
+    Private Function GetCustomerIdByShortnameLike(ByVal shortname As String) As String
+        If shortname.Trim = "" Then
+            Return ""
+        End If
+        Try
+            Dim sql As String = "select top 1 customer_id from customer where shortname like '%" & SqlSafe(shortname.Trim) & "%' and continued=1"
+            Dim ds As DataSet = ReadDataSet(sql)
+            If ds IsNot Nothing AndAlso ds.Tables.Count > 0 AndAlso ds.Tables(0).Rows.Count > 0 Then
+                Return ds.Tables(0).Rows(0).Item("customer_id").ToString()
+            End If
+        Catch ex As Exception
+        End Try
+        Return ""
+    End Function
+
     Private Function GetPortNameByCode(ByVal portCode As String) As String
         If portCode.Trim = "" Then
             Return ""
@@ -336,7 +351,15 @@ Public Class frmImportAirImportJob
             rs.Fields("lot").Value = UCase(GetCellText(ws, "F", rowIndex))
             rs.Fields("shipper").Value = GetCellText(ws, "G", rowIndex)
             rs.Fields("consignee").Value = GetCellText(ws, "H", rowIndex)
-            rs.Fields("AgencyName").Value = GetCellText(ws, "A", rowIndex)
+            Dim agencyShortname As String = GetCellText(ws, "A", rowIndex)
+            rs.Fields("AgencyName").Value = agencyShortname
+            Dim agentId As String = GetCustomerIdByShortnameLike(agencyShortname)
+            If agentId <> "" Then
+                Try
+                    rs.Fields("agentid").Value = "{" & agentId.Replace("{", "").Replace("}", "") & "}"
+                Catch ex As Exception
+                End Try
+            End If
 
             Dim polCode As String = GetCellText(ws, "O", rowIndex)
             Dim podCode As String = GetCellText(ws, "P", rowIndex)
@@ -443,7 +466,17 @@ Public Class frmImportAirImportJob
                 End Try
             End If
 
-            SetFieldIfHasText(rs, "AgencyName", GetCellText(ws, "A", rowIndex))
+            Dim agencyShortname As String = GetCellText(ws, "A", rowIndex)
+            SetFieldIfHasText(rs, "AgencyName", agencyShortname)
+            If agencyShortname <> "" Then
+                Dim agentId As String = GetCustomerIdByShortnameLike(agencyShortname)
+                If agentId <> "" Then
+                    Try
+                        rs.Fields("agentid").Value = "{" & agentId.Replace("{", "").Replace("}", "") & "}"
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
             SetFieldIfHasText(rs, "CY_CFS_ITEM", GetCellText(ws, "D", rowIndex))
             SetFieldIfHasText(rs, "pic_report", GetCellText(ws, "E", rowIndex))
 

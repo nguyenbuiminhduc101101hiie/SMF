@@ -110,7 +110,7 @@ Public Class frmInbound
 
             id = "customer_id"
             value = "company"
-            strQuery = "Select customer_id,company + '-' + taxcode as company from customer where CONTINUED=1 Order by company "
+            strQuery = "Select customer_id,company as company from customer where CONTINUED=1 Order by company "
             loadDataToObject(Me.cboConsignee, strQuery, id, value)
 
             Me.cboNotify.Items.Clear()
@@ -257,7 +257,7 @@ Public Class frmInbound
             Try
                 id = "customer_id"
                 value = "company"
-                strQuery = "Select customer_id,taxcode + '-' + company as company from customer where CONTINUED=1 and maincode like '%agent%' Order by company "
+                strQuery = "Select customer_id,company as company from customer where CONTINUED=1 and maincode like '%agent%' Order by company "
                 Me.cboAgent.Items.Clear()
 
                 loadDataToObject(Me.cboAgent, strQuery, id, value)
@@ -9700,7 +9700,7 @@ Err_Renamed:
             Dim sql As String
             Dim ds As New DataSet
             If Me.cboAgent.Text.Trim = "" Then
-                DisplayMessage(True, "Đại lý ?")
+                'DisplayMessage(True, "Đại lý ?")
                 Exit Sub
             End If
             sql = " select * from customer where customer_id ='" & FindValueID(Me.cboAgent, Me.cboAgent.Text) & "' "
@@ -9713,7 +9713,7 @@ Err_Renamed:
 
             End If
         Catch ex As Exception
-            DisplayMessage(True, "Đại lý ?")
+            'DisplayMessage(True, "Đại lý ?")
         End Try
     End Sub
 
@@ -9722,7 +9722,7 @@ Err_Renamed:
             Dim sql As String
             Dim ds As New DataSet
             If Me.cboAgent.Text.Trim = "" Then
-                DisplayMessage(True, "Đại lý ?")
+                '   'DisplayMessage(True, "Đại lý ?")
                 Exit Sub
             End If
             sql = " select * from customer where customer_id ='" & FindValueID(Me.cboAgent, Me.cboAgent.Text) & "' "
@@ -9740,7 +9740,7 @@ Err_Renamed:
 
             End If
         Catch ex As Exception
-            DisplayMessage(True, "Đại lý ?")
+            'DisplayMessage(True, "Đại lý ?")
         End Try
     End Sub
 
@@ -16604,6 +16604,10 @@ Err_Renamed:
     End Sub
 
     Private Sub txtdiadiemgiaohang_TextChanged(sender As Object, e As EventArgs) Handles txtdiadiemgiaohang.TextChanged
+
+    End Sub
+
+    Private Sub txtarrival_chitiethanghoa_TextChanged(sender As Object, e As EventArgs) Handles txtarrival_chitiethanghoa.TextChanged
 
     End Sub
 

@@ -21,7 +21,7 @@ End Class
 Public Class MasterDataExportContext
     Public Row As DataRow
     Public Kind As MasterDataShipmentKind
-    Public ContainerRow As DataRow
+    Public ContainerRows As New List(Of DataRow)
     Public CompanyName As String = ""
     Public AgentName As String = ""
     Public BlibId As String = ""
@@ -40,13 +40,14 @@ Public Module MasterDataExportHelper
     Public Const TemplateHeaderBackupRow As Integer = 200
     Public Const DataStartRow As Integer = 11
     Public Const FirstTemplateColumnIndex As Integer = 2
-    Public Const LastTemplateColumnIndex As Integer = 71
+    Public Const LastTemplateColumnIndex As Integer = 75
 
     Private templateHeaderCache As Dictionary(Of String, String)
     Private templateHeadersLoaded As Boolean = False
 
     Private ReadOnly AfItemId As String = "8D24860B-5B90-49B6-9C01-C3A244EEAA4C"
     Private ReadOnly OfItemId As String = "5512096C-87AB-42A3-A767-BBEF45F7B62A"
+    Private ReadOnly BlfItemId As String = "720B337D-CCDB-4C3F-B80B-AC8832B1DB2F"
 
     Private ReadOnly DebitItemIds As New Dictionary(Of String, String) From {
         {"TRKO", "B70D388F-2C6E-4317-83CD-FCB03AF742B2"},
@@ -58,7 +59,6 @@ Public Module MasterDataExportHelper
         {"CDFO", "7A42FB16-CCFE-49F9-B1B2-4DDCA14FC5BC"},
         {"VGM", "9AEB4F22-CC2E-4F1C-B2C5-D8DCF123D33C"},
         {"BKF", "D777E578-776B-4EEB-82AD-1996DDF8823C"},
-        {"AWBF_BLF", "FD21CED4-FB6E-4FE0-955A-051E597C7222"},
         {"TLXF", "9BEB8EBD-6CB3-4781-AB35-AF7B840EC35E"},
         {"GCO", "7FD2AC51-5610-4F36-973F-CBC78E58A5BA"},
         {"WHGC", "308B2D09-51CB-49B6-8380-867BD03AFD43"},
@@ -160,6 +160,10 @@ Public Module MasterDataExportHelper
         AddColumn(cols, "WHHF", "WHHF", "BQ")
         AddColumn(cols, "IMTAX", "IMTAX", "BR")
         AddColumn(cols, "BCQT", "BCQT", "BS")
+        AddColumn(cols, "TOTAL_FEE_NO_TAX", "Tong phi khong thue", "BT")
+        AddColumn(cols, "TOTAL_FEE_WITH_TAX", "Tong phi co thue", "BU")
+        AddColumn(cols, "TOTAL_TAX", "Tong thue", "BV")
+        AddColumn(cols, "TOTAL_FEE_ALL", "Tong cac phi", "BW")
         Return cols
     End Function
 
@@ -391,7 +395,9 @@ Public Module MasterDataExportHelper
             Dim sqlCont As String = "select * from containerrepair where inboundid ='" & ctx.BlibId & "'"
             Dim dsCont As DataSet = ReadDataSet(sqlCont)
             If dsCont IsNot Nothing AndAlso dsCont.Tables.Count > 0 AndAlso dsCont.Tables(0).Rows.Count > 0 Then
-                ctx.ContainerRow = dsCont.Tables(0).Rows(0)
+                For Each dr As DataRow In dsCont.Tables(0).Rows
+                    ctx.ContainerRows.Add(dr)
+                Next
             End If
         Catch
         End Try
@@ -462,9 +468,9 @@ Public Module MasterDataExportHelper
             Case "CLOSING"
                 Return row.Item("closing").ToString()
             Case "ETA"
-                Return row.Item("eta").ToString()
-            Case "SAILINGDATE"
                 Return row.Item("SAILINGDATE").ToString()
+            Case "SAILINGDATE"
+                Return row.Item("eta").ToString()
             Case "MBL_COPY"
                 Return GetContOrMblText(ctx)
             Case "VESSEL"
@@ -473,9 +479,22 @@ Public Module MasterDataExportHelper
                 Return row.Item("voyage").ToString()
             Case "REMARKS"
                 Return row.Item("remarks").ToString()
+            Case "AWBF_BLF"
+                Return FormatNumber(GetDebitAmount(ctx, BlfItemId), 2)
             Case "AF_OF"
                 Dim itemId = If(ctx.IsAirFreightItem, AfItemId, OfItemId)
                 Return FormatNumber(GetDebitAmount(ctx, itemId), 2)
+            Case "TOTAL_FEE_NO_TAX"
+                Return FormatNumber(GetFreightPreTaxTotal(ctx, "ISNULL(taxprice, 0) = 0"), 2)
+            Case "TOTAL_FEE_WITH_TAX"
+                Return FormatNumber(GetFreightPreTaxTotal(ctx, "ISNULL(taxprice, 0) <> 0"), 2)
+            Case "TOTAL_TAX"
+                Return FormatNumber(GetFreightTaxTotal(ctx, "ISNULL(taxprice, 0) <> 0"), 2)
+            Case "TOTAL_FEE_ALL"
+                Dim noTax = GetFreightPreTaxTotal(ctx, "ISNULL(taxprice, 0) = 0")
+                Dim withTax = GetFreightPreTaxTotal(ctx, "ISNULL(taxprice, 0) <> 0")
+                Dim tax = GetFreightTaxTotal(ctx, "ISNULL(taxprice, 0) <> 0")
+                Return FormatNumber(noTax + withTax + tax, 2)
             Case Else
                 If DebitItemIds.ContainsKey(key) Then
                     Return FormatNumber(GetDebitAmount(ctx, DebitItemIds(key)), 2)
@@ -660,39 +679,122 @@ Public Module MasterDataExportHelper
     End Function
 
     Private Function GetContainerQtyText(ctx As MasterDataExportContext) As String
-        If ctx.ContainerRow Is Nothing Then
+        If ctx.ContainerRows Is Nothing OrElse ctx.ContainerRows.Count = 0 Then
             Return ""
         End If
 
-        Dim typeText As String = ctx.ContainerRow.Item("type").ToString()
-        If typeText.Length >= 2 Then
-            typeText = typeText.Substring(0, 2)
+        Dim qtyByType As New Dictionary(Of String, Double)(StringComparer.OrdinalIgnoreCase)
+        Dim typeOrder As New List(Of String)
+
+        For Each dr As DataRow In ctx.ContainerRows
+            Dim typeText As String = dr.Item("type").ToString()
+            If typeText.Length >= 2 Then
+                typeText = typeText.Substring(0, 2)
+            End If
+            If typeText.Length = 0 Then
+                Continue For
+            End If
+
+            Dim qty As Double = 0
+            Try
+                qty = CDbl(dr.Item("sokien").ToString())
+            Catch ex As Exception
+            End Try
+
+            If Not qtyByType.ContainsKey(typeText) Then
+                qtyByType(typeText) = 0
+                typeOrder.Add(typeText)
+            End If
+            qtyByType(typeText) += qty
+        Next
+
+        If typeOrder.Count = 0 Then
+            Return ""
         End If
 
-        Return ctx.ContainerRow.Item("sokien").ToString() & " " & typeText
+        Dim parts As New List(Of String)
+        For Each typeText As String In typeOrder
+            Dim qtyVal As Double = qtyByType(typeText)
+            If qtyVal = Math.Truncate(qtyVal) Then
+                parts.Add(CInt(qtyVal).ToString() & " " & typeText)
+            Else
+                parts.Add(qtyVal.ToString() & " " & typeText)
+            End If
+        Next
+
+        Return String.Join(", ", parts.ToArray())
     End Function
 
     Private Function GetContainerField(ctx As MasterDataExportContext, fieldName As String) As String
-        If ctx.ContainerRow Is Nothing Then
+        If ctx.ContainerRows Is Nothing OrElse ctx.ContainerRows.Count = 0 Then
             Return ""
         End If
-        Return ctx.ContainerRow.Item(fieldName).ToString()
+
+        Dim total As Double = 0
+        Dim hasValue As Boolean = False
+
+        For Each dr As DataRow In ctx.ContainerRows
+            Try
+                Dim valText As String = dr.Item(fieldName).ToString().Trim()
+                If valText.Length > 0 Then
+                    total += CDbl(valText)
+                    hasValue = True
+                End If
+            Catch ex As Exception
+            End Try
+        Next
+
+        If Not hasValue Then
+            Return ""
+        End If
+
+        If total = Math.Truncate(total) Then
+            Return CInt(total).ToString()
+        End If
+
+        Return total.ToString()
     End Function
 
     Private Function GetDebitAmount(ctx As MasterDataExportContext, itemId As String) As Double
-        Dim amountExpr As String
+        Return GetFreightAmountTotal(ctx, GetPreTaxAmountExpr(ctx), "itemid ='" & itemId & "'")
+    End Function
+
+    Private Function GetFreightPreTaxTotal(ctx As MasterDataExportContext, taxFilter As String) As Double
+        Return GetFreightAmountTotal(ctx, GetPreTaxAmountExpr(ctx), taxFilter)
+    End Function
+
+    Private Function GetFreightTaxTotal(ctx As MasterDataExportContext, taxFilter As String) As Double
+        Return GetFreightAmountTotal(ctx, GetTaxAmountExpr(ctx), taxFilter)
+    End Function
+
+    Private Function GetPreTaxAmountExpr(ctx As MasterDataExportContext) As String
         If ctx.ExportInUsd Then
             ' Quy đổi về USD: thanhtientruocthueVND là tiền VND, chia cho tigia (tỷ giá lưu theo currency của phí).
             ' Với phí currency = USD  : thanhtientruocthueVND = giá USD * tigia  -> /tigia ra USD.
             ' Với phí currency = VND  : tigia lưu tỷ giá USD->VND               -> /tigia ra USD.
             ' Guard tigia = 0/NULL để tránh chia cho 0.
-            amountExpr = "CASE WHEN ISNULL(tigia, 0) = 0 THEN 0 ELSE thanhtientruocthueVND / tigia END"
-        Else
-            amountExpr = "thanhtientruocthueVND"
+            Return "CASE WHEN ISNULL(tigia, 0) = 0 THEN 0 ELSE thanhtientruocthueVND / tigia END"
+        End If
+        Return "thanhtientruocthueVND"
+    End Function
+
+    Private Function GetTaxAmountExpr(ctx As MasterDataExportContext) As String
+        If ctx.ExportInUsd Then
+            Return "CASE WHEN ISNULL(tigia, 0) = 0 THEN 0 ELSE tienthueVND / tigia END"
+        End If
+        Return "tienthueVND"
+    End Function
+
+    Private Function GetFreightAmountTotal(ctx As MasterDataExportContext, amountExpr As String, extraFilter As String) As Double
+        If ctx.BlibId.Trim().Length = 0 OrElse ctx.FreightTable.Trim().Length = 0 Then
+            Return 0
         End If
 
         Dim sql As String = "select ISNULL(sum(" & amountExpr & "), 0) as total from " &
-            ctx.FreightTable & " where " & ctx.FreightIdColumn & " ='" & ctx.BlibId & "' and itemid ='" & itemId & "'"
+            ctx.FreightTable & " where " & ctx.FreightIdColumn & " ='" & ctx.BlibId & "'"
+        If extraFilter.Trim().Length > 0 Then
+            sql &= " and " & extraFilter
+        End If
         Return GetDebitTotal(sql)
     End Function
 
@@ -727,7 +829,7 @@ Public Module MasterDataExportHelper
         Dim defaultKeys As List(Of String) = GetDefaultColumnKeys()
 
         Try
-            ws.Range("B" & TemplateHeaderRow.ToString() & ":BS" & TemplateHeaderRow.ToString()).Copy(
+            ws.Range("B" & TemplateHeaderRow.ToString() & ":BW" & TemplateHeaderRow.ToString()).Copy(
                 ws.Range("B" & TemplateHeaderBackupRow.ToString()))
         Catch
         End Try
@@ -746,7 +848,7 @@ Public Module MasterDataExportHelper
         Next
 
         Try
-            ws.Range("B" & TemplateHeaderBackupRow.ToString() & ":BS" & TemplateHeaderBackupRow.ToString()).Clear()
+            ws.Range("B" & TemplateHeaderBackupRow.ToString() & ":BW" & TemplateHeaderBackupRow.ToString()).Clear()
         Catch
         End Try
 

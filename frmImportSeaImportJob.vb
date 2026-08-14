@@ -258,6 +258,21 @@ Public Class frmImportSeaImportJob
         Return ""
     End Function
 
+    Private Function GetCustomerIdByShortnameLike(ByVal shortname As String) As String
+        If shortname.Trim = "" Then
+            Return ""
+        End If
+        Try
+            Dim sql As String = "select top 1 customer_id from customer where shortname like '%" & SqlSafe(shortname.Trim) & "%' and continued=1"
+            Dim ds As DataSet = ReadDataSet(sql)
+            If ds IsNot Nothing AndAlso ds.Tables.Count > 0 AndAlso ds.Tables(0).Rows.Count > 0 Then
+                Return ds.Tables(0).Rows(0).Item("customer_id").ToString()
+            End If
+        Catch ex As Exception
+        End Try
+        Return ""
+    End Function
+
     Private Function GetPortNameByCode(ByVal portCode As String) As String
         If portCode.Trim = "" Then
             Return ""
@@ -384,10 +399,23 @@ Public Class frmImportSeaImportJob
             rs.Fields("BLIB_ID").Value = blibId
             rs.Fields("ref").Value = refNo
             rs.Fields("hbl").Value = GetCellText(ws, "J", rowIndex)
+            rs.Fields("sovandon").Value = GetCellText(ws, "J", rowIndex)
+            Try
+                rs.Fields("arrival_hbl").Value = GetCellText(ws, "J", rowIndex)
+            Catch ex As Exception
+            End Try
 
             Dim mbl As String = GetCellText(ws, "I", rowIndex)
             If mbl <> "" Then
                 rs.Fields("Mbl").Value = mbl
+                Try
+                    rs.Fields("soVanDonGoc").Value = mbl
+                Catch ex As Exception
+                End Try
+                Try
+                    rs.Fields("arrival_mbl").Value = mbl
+                Catch ex As Exception
+                End Try
             End If
 
             rs.Fields("gFLC").Value = gflc
@@ -396,18 +424,53 @@ Public Class frmImportSeaImportJob
             rs.Fields("pic_report").Value = GetCellText(ws, "E", rowIndex)
             rs.Fields("lot").Value = UCase(GetCellText(ws, "F", rowIndex))
             rs.Fields("shipper").Value = GetCellText(ws, "G", rowIndex)
+            rs.Fields("nguoiGuiHang").Value = GetCellText(ws, "G", rowIndex)
             rs.Fields("consignee").Value = GetCellText(ws, "H", rowIndex)
-            rs.Fields("AgencyName").Value = GetCellText(ws, "A", rowIndex)
+            Try
+                rs.Fields("arrival_kinhgui").Value = GetCellText(ws, "H", rowIndex)
+            Catch ex As Exception
+            End Try
+            Dim agencyShortname As String = GetCellText(ws, "A", rowIndex)
+            rs.Fields("AgencyName").Value = agencyShortname
+            Dim agentId As String = GetCustomerIdByShortnameLike(agencyShortname)
+            If agentId <> "" Then
+                Try
+                    rs.Fields("agentid").Value = "{" & agentId.Replace("{", "").Replace("}", "") & "}"
+                Catch ex As Exception
+                End Try
+            End If
 
+            Dim pkgTextK As String = GetCellText(ws, "K", rowIndex)
             Dim soKienK As String = ""
             Dim pkgTypeK As String = ""
-            ParsePackageInfo(GetCellText(ws, "K", rowIndex), soKienK, pkgTypeK)
+            ParsePackageInfo(pkgTextK, soKienK, pkgTypeK)
             Try
                 rs.Fields("tongSoKienLoaiKien").Value = soKienK
             Catch ex As Exception
             End Try
             Try
                 rs.Fields("loaikien").Value = pkgTypeK
+            Catch ex As Exception
+            End Try
+            Try
+                Dim arrivalSoluong As String = FormatArrivalSoluong(soKienK, pkgTypeK, pkgTextK)
+                If arrivalSoluong <> "" Then
+                    rs.Fields("arrival_soluong").Value = arrivalSoluong
+                End If
+            Catch ex As Exception
+            End Try
+            Try
+                Dim soKgL As String = GetCellText(ws, "L", rowIndex)
+                If soKgL <> "" Then
+                    rs.Fields("arrival_trongluong").Value = soKgL & " CBM"
+                End If
+            Catch ex As Exception
+            End Try
+            Try
+                Dim soKhoiM As String = GetCellText(ws, "M", rowIndex)
+                If soKhoiM <> "" Then
+                    rs.Fields("arrival_khoiluong").Value = soKhoiM & " KGS"
+                End If
             Catch ex As Exception
             End Try
 
@@ -434,30 +497,61 @@ Public Class frmImportSeaImportJob
             rs.Fields("pol").Value = polName
             rs.Fields("pod").Value = podName
             Try
-                rs.Fields("cangGiaohang").Value = polName
+                rs.Fields("cangGiaohang").Value = podCode
             Catch ex As Exception
             End Try
             Try
-                rs.Fields("cangDoHang").Value = podName
+                rs.Fields("cangXephang").Value = polCode
             Catch ex As Exception
             End Try
             Try
-                rs.Fields("diadiemgiaohang").Value = podName
+                rs.Fields("cangChuyentai").Value = podCode
             Catch ex As Exception
             End Try
             Try
-                rs.Fields("cangXephang").Value = polName & "_" & polName
+                rs.Fields("cangDoHang").Value = podCode
+            Catch ex As Exception
+            End Try
+            Try
+                rs.Fields("diadiemgiaohang").Value = podCode
+            Catch ex As Exception
+            End Try
+            Try
+                rs.Fields("arrival_POL").Value = polName
+            Catch ex As Exception
+            End Try
+            Try
+                rs.Fields("arrival_POd").Value = podName
             Catch ex As Exception
             End Try
 
             rs.Fields("vessel").Value = GetCellText(ws, "V", rowIndex)
+            Try
+                rs.Fields("arrival_tau").Value = GetCellText(ws, "V", rowIndex)
+            Catch ex As Exception
+            End Try
             rs.Fields("voyage").Value = GetCellText(ws, "W", rowIndex)
+            Try
+                rs.Fields("arrival_chuyen").Value = GetCellText(ws, "W", rowIndex)
+            Catch ex As Exception
+            End Try
             rs.Fields("shippingline").Value = GetCellText(ws, "X", rowIndex)
             rs.Fields("kho").Value = GetCellText(ws, "Y", rowIndex)
             rs.Fields("remarks").Value = GetCellText(ws, "Z", rowIndex)
+            Try
+                rs.Fields("arrival_chitiethanghoa").Value = GetCellText(ws, "AA", rowIndex)
+            Catch ex As Exception
+            End Try
             rs.Fields("DESCRIPTION").Value = GetCellText(ws, "AA", rowIndex)
             rs.Fields("closeFile").Value = (UCase(GetCellText(ws, "AB", rowIndex)) = "TRUE")
             rs.Fields("status").Value = GetCellText(ws, "AC", rowIndex)
+            Try
+                Dim soContSeal As String = BuildArrivalSoContSeal(ws, rowIndex)
+                If soContSeal <> "" Then
+                    rs.Fields("arrival_soContSeal").Value = soContSeal
+                End If
+            Catch ex As Exception
+            End Try
 
             If gsc = "C" Then
                 rs.Fields("nvocc").Value = False
@@ -496,6 +590,10 @@ Public Class frmImportSeaImportJob
                     rs.Fields("eta").Value = ddMMMyyyy(etaDate.Value)
                     rs.Fields("datereport").Value = ddMMMyyyy(etaDate.Value)
                     rs.Fields("InvoiceRequestDate").Value = ddMMMyyyy(etaDate.Value)
+                Catch ex As Exception
+                End Try
+                Try
+                    rs.Fields("arrival_ETA").Value = ddMMMyyyy(etaDate.Value)
                 Catch ex As Exception
                 End Try
             End If
@@ -566,7 +664,17 @@ Public Class frmImportSeaImportJob
                 End Try
             End If
 
-            SetFieldIfHasText(rs, "AgencyName", GetCellText(ws, "A", rowIndex))
+            Dim agencyShortname As String = GetCellText(ws, "A", rowIndex)
+            SetFieldIfHasText(rs, "AgencyName", agencyShortname)
+            If agencyShortname <> "" Then
+                Dim agentId As String = GetCustomerIdByShortnameLike(agencyShortname)
+                If agentId <> "" Then
+                    Try
+                        rs.Fields("agentid").Value = "{" & agentId.Replace("{", "").Replace("}", "") & "}"
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
             SetFieldIfHasText(rs, "CY_CFS_ITEM", GetCellText(ws, "D", rowIndex))
             SetFieldIfHasText(rs, "pic_report", GetCellText(ws, "E", rowIndex))
 
@@ -576,8 +684,15 @@ Public Class frmImportSeaImportJob
             End If
 
             SetFieldIfHasText(rs, "shipper", GetCellText(ws, "G", rowIndex))
+            SetFieldIfHasText(rs, "nguoiGuiHang", GetCellText(ws, "G", rowIndex))
             SetFieldIfHasText(rs, "consignee", GetCellText(ws, "H", rowIndex))
+            SetFieldIfHasText(rs, "arrival_kinhgui", GetCellText(ws, "H", rowIndex))
             SetFieldIfHasText(rs, "Mbl", GetCellText(ws, "I", rowIndex))
+            SetFieldIfHasText(rs, "soVanDonGoc", GetCellText(ws, "I", rowIndex))
+            SetFieldIfHasText(rs, "arrival_mbl", GetCellText(ws, "I", rowIndex))
+            SetFieldIfHasText(rs, "sovandon", GetCellText(ws, "J", rowIndex))
+            SetFieldIfHasText(rs, "hbl", GetCellText(ws, "J", rowIndex))
+            SetFieldIfHasText(rs, "arrival_hbl", GetCellText(ws, "J", rowIndex))
 
             Dim pkgTextK As String = GetCellText(ws, "K", rowIndex)
             If pkgTextK <> "" Then
@@ -586,6 +701,15 @@ Public Class frmImportSeaImportJob
                 ParsePackageInfo(pkgTextK, soKienKUpd, pkgTypeKUpd)
                 SetFieldIfHasText(rs, "tongSoKienLoaiKien", soKienKUpd)
                 SetFieldIfHasText(rs, "loaikien", pkgTypeKUpd)
+                SetFieldIfHasText(rs, "arrival_soluong", FormatArrivalSoluong(soKienKUpd, pkgTypeKUpd, pkgTextK))
+            End If
+            Dim soKgL As String = GetCellText(ws, "L", rowIndex)
+            If soKgL <> "" Then
+                SetFieldIfHasText(rs, "arrival_trongluong", soKgL & " CBM")
+            End If
+            Dim soKhoiM As String = GetCellText(ws, "M", rowIndex)
+            If soKhoiM <> "" Then
+                SetFieldIfHasText(rs, "arrival_khoiluong", soKhoiM & " KGS")
             End If
 
             Dim polCode As String = GetCellText(ws, "N", rowIndex)
@@ -602,11 +726,11 @@ Public Class frmImportSeaImportJob
                 End Try
                 rs.Fields("pol").Value = polName
                 Try
-                    rs.Fields("cangGiaohang").Value = polName
+                    rs.Fields("cangXephang").Value = polCode
                 Catch ex As Exception
                 End Try
                 Try
-                    rs.Fields("cangXephang").Value = polName & "_" & polName
+                    rs.Fields("arrival_POL").Value = polName
                 Catch ex As Exception
                 End Try
             End If
@@ -625,20 +749,35 @@ Public Class frmImportSeaImportJob
                 End Try
                 rs.Fields("pod").Value = podName
                 Try
-                    rs.Fields("cangDoHang").Value = podName
+                    rs.Fields("cangGiaohang").Value = podCode
                 Catch ex As Exception
                 End Try
                 Try
-                    rs.Fields("diadiemgiaohang").Value = podName
+                    rs.Fields("cangChuyentai").Value = podCode
+                Catch ex As Exception
+                End Try
+                Try
+                    rs.Fields("cangDoHang").Value = podCode
+                Catch ex As Exception
+                End Try
+                Try
+                    rs.Fields("diadiemgiaohang").Value = podCode
+                Catch ex As Exception
+                End Try
+                Try
+                    rs.Fields("arrival_POd").Value = podName
                 Catch ex As Exception
                 End Try
             End If
 
             SetFieldIfHasText(rs, "vessel", GetCellText(ws, "V", rowIndex))
+            SetFieldIfHasText(rs, "arrival_tau", GetCellText(ws, "V", rowIndex))
             SetFieldIfHasText(rs, "voyage", GetCellText(ws, "W", rowIndex))
+            SetFieldIfHasText(rs, "arrival_chuyen", GetCellText(ws, "W", rowIndex))
             SetFieldIfHasText(rs, "shippingline", GetCellText(ws, "X", rowIndex))
             SetFieldIfHasText(rs, "kho", GetCellText(ws, "Y", rowIndex))
             SetFieldIfHasText(rs, "remarks", GetCellText(ws, "Z", rowIndex))
+            SetFieldIfHasText(rs, "arrival_chitiethanghoa", GetCellText(ws, "Z", rowIndex))
             SetFieldIfHasText(rs, "DESCRIPTION", GetCellText(ws, "AA", rowIndex))
 
             Dim closeFileText As String = GetCellText(ws, "AB", rowIndex)
@@ -647,6 +786,7 @@ Public Class frmImportSeaImportJob
             End If
 
             SetFieldIfHasText(rs, "status", GetCellText(ws, "AC", rowIndex))
+            SetFieldIfHasText(rs, "arrival_soContSeal", BuildArrivalSoContSeal(ws, rowIndex))
 
             Dim cargoReady As Date? = GetCellDate(ws, "P", rowIndex)
             If cargoReady.HasValue Then
@@ -675,6 +815,10 @@ Public Class frmImportSeaImportJob
                     rs.Fields("InvoiceRequestDate").Value = ddMMMyyyy(etaDate.Value)
                 Catch ex As Exception
                 End Try
+                Try
+                    rs.Fields("arrival_ETA").Value = ddMMMyyyy(etaDate.Value)
+                Catch ex As Exception
+                End Try
             End If
 
             rs.Update()
@@ -700,8 +844,9 @@ Public Class frmImportSeaImportJob
             Dim soKhoi As String = GetCellText(ws, "M", rowIndex)
             Dim containerNo As String = GetCellText(ws, "T", rowIndex)
             Dim seal As String = GetCellText(ws, "U", rowIndex)
+            Dim containerType As String = GetCellText(ws, "AD", rowIndex)
 
-            If pkgText = "" AndAlso soKg = "" AndAlso soKhoi = "" AndAlso containerNo = "" AndAlso seal = "" Then
+            If pkgText = "" AndAlso soKg = "" AndAlso soKhoi = "" AndAlso containerNo = "" AndAlso seal = "" AndAlso containerType = "" Then
                 Return True
             End If
 
@@ -734,6 +879,9 @@ Public Class frmImportSeaImportJob
             End If
             If seal <> "" Then
                 rs.Fields("seal").Value = seal
+            End If
+            If containerType <> "" Then
+                rs.Fields("containertype").Value = containerType
             End If
 
             rs.Update()
@@ -779,6 +927,7 @@ Public Class frmImportSeaImportJob
             rs.Fields("sokhoi").Value = GetCellText(ws, "M", rowIndex)
             rs.Fields("containerno").Value = GetCellText(ws, "T", rowIndex)
             rs.Fields("seal").Value = GetCellText(ws, "U", rowIndex)
+            rs.Fields("containertype").Value = GetCellText(ws, "AD", rowIndex)
 
             rs.Update()
             rs.Close()
@@ -807,18 +956,85 @@ Public Class frmImportSeaImportJob
             soKien = parts(0).Trim()
         End If
         If parts.Length > 1 Then
-            pkgType = parts(1).Trim()
+            pkgType = MapPackageType(parts(1).Trim())
         End If
     End Sub
+
+    Private Function MapPackageType(ByVal code As String) As String
+        Select Case UCase(code)
+            Case "CT"
+                Return "CT-Carton"
+            Case "PK"
+                Return "PK-Package"
+            Case "PP"
+                Return "PP-Pallet"
+            Case "BL"
+                Return "BL-Bale"
+            Case "RL"
+                Return "RL-Roll"
+            Case "PL"
+                Return "PL-Pail"
+            Case "BG"
+                Return "BG-Bag"
+            Case "BX"
+                Return "BX-Box"
+            Case "CS"
+                Return "CS-Case"
+            Case "ZZ"
+                Return "ZZ-Others"
+            Case Else
+                Return code
+        End Select
+    End Function
+
+    Private Function GetPackageTypeDisplayName(ByVal mappedType As String) As String
+        If mappedType Is Nothing OrElse mappedType.Trim() = "" Then
+            Return ""
+        End If
+        Dim idx As Integer = mappedType.IndexOf("-"c)
+        If idx >= 0 AndAlso idx < mappedType.Length - 1 Then
+            Return mappedType.Substring(idx + 1).Trim()
+        End If
+        Return mappedType.Trim()
+    End Function
+
+    Private Function FormatArrivalSoluong(ByVal soKien As String, ByVal mappedType As String, ByVal fallbackText As String) As String
+        Dim displayName As String = GetPackageTypeDisplayName(mappedType)
+        If soKien <> "" AndAlso displayName <> "" Then
+            Return soKien & " " & displayName
+        End If
+        If fallbackText Is Nothing Then
+            Return ""
+        End If
+        Return fallbackText.Trim()
+    End Function
+
+    Private Function BuildArrivalSoContSeal(ByVal ws As _Worksheet, ByVal rowIndex As Integer) As String
+        Dim contNo As String = GetCellText(ws, "T", rowIndex)
+        Dim seal As String = GetCellText(ws, "U", rowIndex)
+        Dim contType As String = GetCellText(ws, "AD", rowIndex)
+        Dim mot As String = GetCellText(ws, "C", rowIndex)
+        If contNo = "" AndAlso seal = "" AndAlso contType = "" AndAlso mot = "" Then
+            Return ""
+        End If
+        Return contNo & "/" & seal & "/" & contType & "/" & mot
+    End Function
 
     Private Sub SetDateField(ByVal rs As ADODB.Recordset, ByVal fieldName As String, ByVal value As Date?)
         If Not value.HasValue Then
             Return
         End If
+        Dim formatted As String = ddMMMyyyy(value.Value.Date)
+        If formatted Is Nothing OrElse formatted.Trim() = "" Then
+            formatted = value.Value.Date.ToString("dd-MMM-yyyy", Globalization.CultureInfo.InvariantCulture).ToUpperInvariant()
+        End If
         Try
-            rs.Fields(fieldName).Value = ddMMMyyyy(value.Value)
+            rs.Fields(fieldName).Value = formatted
         Catch ex As Exception
-            rs.Fields(fieldName).Value = value.Value
+            Try
+                rs.Fields(fieldName).Value = value.Value.Date
+            Catch
+            End Try
         End Try
     End Sub
 
@@ -836,15 +1052,75 @@ Public Class frmImportSeaImportJob
 
     Private Function GetCellDate(ByVal ws As _Worksheet, ByVal col As String, ByVal rowIndex As Integer) As Date?
         Try
-            Dim cellValue As Object = ws.Range(col & rowIndex.ToString()).Value2
-            If cellValue Is Nothing Then
+            Dim rng As Range = ws.Range(col & rowIndex.ToString())
+            Dim cellValue As Object = rng.Value2
+
+            Dim parsed As Date? = ParseExcelDateValue(cellValue)
+            If parsed.HasValue Then
+                Return parsed
+            End If
+
+            ' Fallback: visible text (e.g. 07-27-2026) when Value2 is empty/unparsed text
+            Try
+                Dim cellText As String = ""
+                If rng.Text IsNot Nothing Then
+                    cellText = rng.Text.ToString()
+                End If
+                parsed = ParseExcelDateValue(cellText)
+                If parsed.HasValue Then
+                    Return parsed
+                End If
+            Catch
+            End Try
+        Catch ex As Exception
+        End Try
+        Return Nothing
+    End Function
+
+    Private Function ParseExcelDateValue(ByVal cellValue As Object) As Date?
+        Try
+            If cellValue Is Nothing OrElse IsDBNull(cellValue) Then
                 Return Nothing
             End If
-            If TypeOf cellValue Is Double Then
-                Return Date.FromOADate(CDbl(cellValue))
+
+            If TypeOf cellValue Is Date Then
+                Return CDate(cellValue).Date
             End If
-            If IsDate(cellValue) Then
-                Return CDate(cellValue)
+
+            ' Excel OA date may come as Double/Decimal/Integer via COM
+            If IsNumeric(cellValue) AndAlso Not (TypeOf cellValue Is String) Then
+                Dim oa As Double = CDbl(cellValue)
+                If oa > 20000 AndAlso oa < 80000 Then
+                    Return Date.FromOADate(oa).Date
+                End If
+            End If
+
+            Dim s As String = cellValue.ToString().Trim()
+            If s = "" Then
+                Return Nothing
+            End If
+
+            s = s.Replace(ChrW(&H2013), "-"c).Replace(ChrW(&H2014), "-"c).Replace("."c, "/"c)
+            If s.StartsWith("'"c) Then
+                s = s.Substring(1).Trim()
+            End If
+
+            Dim d As Date
+            Dim formats() As String = New String() {
+                "MM-dd-yyyy", "M-d-yyyy", "MM/dd/yyyy", "M/d/yyyy",
+                "dd-MM-yyyy", "d-M-yyyy", "dd/MM/yyyy", "d/M/yyyy",
+                "dd-MMM-yyyy", "d-MMM-yyyy", "dd/MMM/yyyy", "d/MMM/yyyy",
+                "yyyy-MM-dd", "yyyy/MM/dd",
+                "MM-dd-yy", "M-d-yy", "MM/dd/yy", "M/d/yy"
+            }
+            If Date.TryParseExact(s, formats, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.AllowWhiteSpaces, d) Then
+                Return d.Date
+            End If
+            If Date.TryParse(s, Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.AllowWhiteSpaces, d) Then
+                Return d.Date
+            End If
+            If IsDate(s) Then
+                Return CDate(s).Date
             End If
         Catch ex As Exception
         End Try

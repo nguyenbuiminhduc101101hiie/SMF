@@ -131,7 +131,7 @@ Public Class frmOutbound
 
             id = "customer_id"
             value = "company"
-            strQuery = "Select customer_id,company + '-' + taxcode as company from customer where CONTINUED=1 Order by company "
+            strQuery = "Select customer_id,company as company from customer where CONTINUED=1 Order by company "
             loadDataToObject(Me.cboConsignee, strQuery, id, value)
 
 
@@ -280,7 +280,7 @@ Public Class frmOutbound
             ' load agent
             id = "customer_id"
             value = "company"
-            strQuery = "Select customer_id,taxcode + '-' + company as company from customer where CONTINUED=1 and maincode like '%agent%' Order by company "
+            strQuery = "Select customer_id,company as company from customer where CONTINUED=1 and maincode like '%agent%' Order by company "
             Me.cboagent.Items.Clear()
 
             loadDataToObject(Me.cboagent, strQuery, id, value)
