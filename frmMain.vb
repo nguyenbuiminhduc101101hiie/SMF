@@ -8,7 +8,7 @@ Imports System.Globalization
 Imports System.IO
 
 
-Friend Class frmMain
+Partial Friend Class frmMain
     'Inherits System.Windows.Forms.Form
     Public otable As DataTable
     Public ds As DataSet
@@ -17,6 +17,7 @@ Friend Class frmMain
 
     Private Sub frmMain_Load(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Load
         Try
+            AddImportFreightQuotationMenu()
             Me.MainMenu1.Enabled = False
 
             ctrFrmMain = Me
@@ -241,6 +242,7 @@ Err_Renamed:
             Me.MainMenu1.Enabled = True
             DisplayNewMessages()
             SetMenu((True))
+            AddImportFreightQuotationMenu()
             CreateObjects()
             GetOption()
             'queryNotify()
@@ -288,7 +290,7 @@ Err_Renamed:
         Try
             Dim Frm As System.Windows.Forms.Form
             '-
-        
+
 
             For Each Frm In My.Application.OpenForms
                 If Frm.Name <> "frmMain" Then
@@ -332,7 +334,7 @@ Err_Renamed:
 
             End Try
 
-        'Kill(tempDir + "\*.*")
+            'Kill(tempDir + "\*.*")
         Catch ex As Exception
 
         End Try
@@ -388,10 +390,10 @@ Err_Renamed:
             rs.MoveNext()
         End While
         rs.Close()
-        
 
-       
-        
+
+
+
 
 
         '-----------------------------------------------------------------------------
@@ -926,7 +928,7 @@ Err_Renamed:
         MsgBox(msgErr(Me, Err.Description))
     End Sub
 
-  
+
     Private Sub smnuCargoInBound_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         On Error GoTo Err_Renamed
         If LoginSucceeded Then
@@ -1019,7 +1021,7 @@ Err_Renamed:
     Private Sub mnuMonitorUserOnline_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuMonitorUserOnline.Click
         On Error GoTo Err_Renamed
         If LoginSucceeded Then
-           
+
             VB6.ShowForm(frmMonitorUser, VB6.FormShowConstants.Modeless, Me)
 
         End If
@@ -1054,7 +1056,7 @@ Err_Renamed:
 
     Private Sub mnuMoreAdvanceSearch_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuMoreAdvanceSearch.Click
         On Error GoTo Err_Renamed
-       
+
         If LoginSucceeded = True Then
             Dim form As New frmAdvanceSearch 'frmQuotationTico
             form.MdiParent = Me
@@ -1179,7 +1181,7 @@ Err_Renamed:
     End Sub
 
     Private Sub mnuPayment_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuPayment.Click
-        
+
     End Sub
 
     Private Sub menuSaleSurcharge_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -1545,7 +1547,7 @@ Err_Renamed:
         MsgBox(msgErr(Me, Err.Description))
     End Sub
 
-   
+
     Private Sub mnuSpecialFreightTariff_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         On Error GoTo Err_Renamed
         If LoginSucceeded Then
@@ -1693,7 +1695,7 @@ Err_Renamed:
         MsgBox(msgErr(Me, Err.Description))
     End Sub
 
-   
+
     Private Sub frmFreighOutboundSummary_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         On Error GoTo Err_Renamed
         VB6.ShowForm(frmFreightnoteSummary, VB6.FormShowConstants.Modeless, Me)
@@ -1887,7 +1889,7 @@ Err_Renamed:
     End Sub
 
     Private Sub TrackingToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-       
+
     End Sub
 
     Private Sub AlarmToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -1896,7 +1898,7 @@ Err_Renamed:
         'FrmLogin.checkAlarmConnecting1()
         '  Me.ListThongbao.Text = ""
         ' Timer1_Tick(sender, e)
-       
+
     End Sub
 
     Private Sub HandlingFeeToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -2048,7 +2050,7 @@ Err_Renamed:
     End Sub
 
     Private Sub Timer1_Tick(ByVal sender As Object, ByVal e As System.EventArgs) Handles Timer1.Tick
-        
+
 
     End Sub
 
@@ -2742,7 +2744,7 @@ Err_Renamed:
 
     End Sub
 
-   
+
     Private Sub baocaotuansale_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
             frmBaocaotuanSale.Show()
@@ -2780,7 +2782,7 @@ Err_Renamed:
             'Else
             '    ShowToolStripMenuItem.Checked = True
             '    ' Me.ListThongbao.Visible = True
-         
+
             ' End If
             Dim form As New frmThongbao_
             form.MdiParent = Me
@@ -2854,7 +2856,7 @@ Err_Renamed:
         End Try
     End Sub
 
-   
+
     Private Sub doichieucongno_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Try
             VB6.ShowForm(frmDoichieuCongNoHoadon, VB6.FormShowConstants.Modeless, Me)
@@ -3468,16 +3470,16 @@ Err_Renamed:
         Mdown = True
     End Sub
 
-    
 
-   
-   
-    
 
-   
-    
 
-    
+
+
+
+
+
+
+
 
     Private Sub mnuBOD_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuReport.Click
 
@@ -3604,7 +3606,7 @@ Err_Renamed:
     End Sub
 
     Private Sub RecordingToolStripMenuItem1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnurecording.Click
-      
+
     End Sub
 
     Private Sub SaleCodeToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SaleCodeToolStripMenuItem.Click
@@ -3785,36 +3787,36 @@ Err_Renamed:
     End Sub
 
     Private Sub Button5_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-      
+
     End Sub
 
-   
+
 
     Private Sub LogisticsContractToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 
     End Sub
 
     Private Sub Button7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-      
+
     End Sub
 
     Private Sub Button11_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-      
+
     End Sub
 
     Private Sub Button12_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-      
+
     End Sub
 
     Private Sub Button10_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        
+
     End Sub
 
     Private Sub Button9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-     
+
     End Sub
 
-    
+
 
 
     Private Sub ShowListShipmentToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -3985,7 +3987,7 @@ Err_Renamed:
 
         End Try
     End Sub
-      
+
     Public Sub ExportDataToFile(ByVal strSourceServer As String, ByVal strBakFileName As String, ByVal WindowsAuth As Boolean, ByVal strUsername As String, ByVal strPassword As String, ByVal strDatabase As String)
         'Dim sourceConnectionString As String = Nothing
 
@@ -4265,7 +4267,7 @@ Err_Renamed:
         End Try
     End Sub
 
-  
+
 
     Private Sub AgentToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles AgentToolStripMenuItem.Click
         On Error GoTo Err_Renamed
@@ -4283,7 +4285,7 @@ Err_Renamed:
 
     Private Sub ExportToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ExportToolStripMenuItem.Click
         If LoginSucceeded Then
-       
+
             If LoginSucceeded = True Then
                 Dim form As New frmQuotation
                 form.MdiParent = Me
@@ -4474,7 +4476,7 @@ Err_Renamed:
     End Sub
 
     Private Sub Button8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-       
+
     End Sub
 
     Private Sub ExportToolStripMenuItem3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -4530,13 +4532,13 @@ Err_Renamed:
 
     End Sub
 
-   
 
 
-   
 
 
-   
+
+
+
 
     Private Sub SheetDetailsToolStripMenuItem2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
 
@@ -5014,7 +5016,7 @@ Err_Renamed:
     End Sub
 
     Private Sub CôngNợKháchHàngToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CôngNợKháchHàngToolStripMenuItem.Click
-        
+
     End Sub
 
     Private Sub CôngNợNhàCungCấpToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CôngNợNhàCungCấpToolStripMenuItem.Click
@@ -5622,7 +5624,7 @@ Err_Renamed:
 
     Private Sub ContainerStatusReportToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ContainerStatusReportToolStripMenuItem.Click
         Try
-           
+
             If LoginSucceeded = True Then
                 Dim form As New frmReportChitietthuchi_container 'frmQuotationTico
                 form.MdiParent = Me
@@ -5818,7 +5820,7 @@ Err_Renamed:
     End Sub
 
     Private Sub ToolStripMenuItem2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItem2.Click
-        
+
     End Sub
 
     Private Sub SổQuỹToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SổQuỹToolStripMenuItem.Click
@@ -5901,7 +5903,7 @@ Err_Renamed:
         End Try
     End Sub
 
-   
+
     Private Sub Ba1oToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Ba1oToolStripMenuItem.Click
         Try
             If LoginSucceeded Then
@@ -6812,7 +6814,7 @@ Err_Renamed:
         End Try
     End Sub
 
-  
+
     Private Sub CargoReceiptToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CargoReceiptToolStripMenuItem.Click
         Try
             If LoginSucceeded Then
@@ -8923,6 +8925,38 @@ Err_Renamed:
         Exit Sub
 Err_Renamed:
         MsgBox(msgErr(Me, Err.Description))
+    End Sub
+
+    Private Sub AddImportFreightQuotationMenu()
+        Try
+            If Me.PricingToolStripMenuItem Is Nothing Then
+                Return
+            End If
+            For Each item As ToolStripItem In Me.PricingToolStripMenuItem.DropDownItems
+                If item.Name = "ImportFreightQuotationToolStripMenuItem" Then
+                    Return
+                End If
+            Next
+            Dim mnu As New ToolStripMenuItem()
+            mnu.Name = "ImportFreightQuotationToolStripMenuItem"
+            mnu.Text = "6. Import Freight Quotation"
+            mnu.ForeColor = System.Drawing.Color.Blue
+            AddHandler mnu.Click, AddressOf ImportFreightQuotationToolStripMenuItem_Click
+            Me.PricingToolStripMenuItem.DropDownItems.Add(mnu)
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub ImportFreightQuotationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ImportFreightQuotationToolStripMenuItem.Click
+        Try
+            If LoginSucceeded = True Then
+                Dim form As New frmImportFreightQuotation
+                form.MdiParent = Me
+                form.Show()
+            End If
+        Catch ex As Exception
+            DisplayMessage(True, Err.Description)
+        End Try
     End Sub
 
     Private Sub QuotationToolStripMenuItem2_Click_1(sender As Object, e As EventArgs) Handles QuotationToolStripMenuItem2.Click

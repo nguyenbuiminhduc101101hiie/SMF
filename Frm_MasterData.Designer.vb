@@ -43,12 +43,12 @@ Partial Class Frm_MasterData
         'Y2
         '
         Me.Y2.FormattingEnabled = True
-        Me.Y2.Items.AddRange(New Object() {"2015", "2016", "2017", "2018", "2019", "2020"})
+        Me.Y2.Items.AddRange(New Object() {"2026", "2027", "2028", "2029", "2030"})
         Me.Y2.Location = New System.Drawing.Point(400, 12)
         Me.Y2.Name = "Y2"
         Me.Y2.Size = New System.Drawing.Size(52, 21)
         Me.Y2.TabIndex = 737
-        Me.Y2.Text = "2015"
+        Me.Y2.Text = "2026"
         '
         'T2
         '
@@ -73,12 +73,12 @@ Partial Class Frm_MasterData
         'Y1
         '
         Me.Y1.FormattingEnabled = True
-        Me.Y1.Items.AddRange(New Object() {"2015", "2016", "2017", "2018", "2019", "2020"})
+        Me.Y1.Items.AddRange(New Object() {"2026", "2027", "2028", "2029", "2030"})
         Me.Y1.Location = New System.Drawing.Point(208, 12)
         Me.Y1.Name = "Y1"
         Me.Y1.Size = New System.Drawing.Size(52, 21)
         Me.Y1.TabIndex = 734
-        Me.Y1.Text = "2015"
+        Me.Y1.Text = "2026"
         '
         'T1
         '
@@ -182,7 +182,7 @@ Partial Class Frm_MasterData
         Me.rdoUSD.AutoSize = True
         Me.rdoUSD.Location = New System.Drawing.Point(100, 20)
         Me.rdoUSD.Name = "rdoUSD"
-        Me.rdoUSD.Size = New System.Drawing.Size(47, 17)
+        Me.rdoUSD.Size = New System.Drawing.Size(48, 17)
         Me.rdoUSD.TabIndex = 1
         Me.rdoUSD.Text = "USD"
         Me.rdoUSD.UseVisualStyleBackColor = True
@@ -205,7 +205,7 @@ Partial Class Frm_MasterData
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Button1)
-        Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.Margin = New System.Windows.Forms.Padding(2)
         Me.Name = "Frm_MasterData"
         Me.Text = "Master Data Export"
         Me.grpCurrency.ResumeLayout(False)

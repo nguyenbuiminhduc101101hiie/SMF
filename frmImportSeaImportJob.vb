@@ -777,7 +777,7 @@ Public Class frmImportSeaImportJob
             SetFieldIfHasText(rs, "shippingline", GetCellText(ws, "X", rowIndex))
             SetFieldIfHasText(rs, "kho", GetCellText(ws, "Y", rowIndex))
             SetFieldIfHasText(rs, "remarks", GetCellText(ws, "Z", rowIndex))
-            SetFieldIfHasText(rs, "arrival_chitiethanghoa", GetCellText(ws, "Z", rowIndex))
+            SetFieldIfHasText(rs, "arrival_chitiethanghoa", GetCellText(ws, "AA", rowIndex))
             SetFieldIfHasText(rs, "DESCRIPTION", GetCellText(ws, "AA", rowIndex))
 
             Dim closeFileText As String = GetCellText(ws, "AB", rowIndex)

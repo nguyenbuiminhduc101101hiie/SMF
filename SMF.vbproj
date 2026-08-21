@@ -41,7 +41,7 @@
     <PublisherName>FMS</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>918</ApplicationRevision>
+    <ApplicationRevision>919</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -2950,6 +2950,12 @@
       <DependentUpon>frmImportAirImportJob.vb</DependentUpon>
     </Compile>
     <Compile Include="frmImportAirImportJob.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmImportFreightQuotation.Designer.vb">
+      <DependentUpon>frmImportFreightQuotation.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmImportFreightQuotation.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmImportSeaImportJob.Designer.vb">
@@ -6068,6 +6074,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmImportAirImportJob.resx">
       <DependentUpon>frmImportAirImportJob.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmImportFreightQuotation.resx">
+      <DependentUpon>frmImportFreightQuotation.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmImportSeaImportJob.resx">
