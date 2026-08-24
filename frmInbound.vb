@@ -8872,6 +8872,7 @@ Err_Renamed:
                 Me.txtPOD.Text = ds.Tables(0).Rows(0).Item("port").ToString
                 Me.cboPortOfUnload.Text = Me.cbopodCode.Text + "-" + Me.txtPOD.Text
                 Me.cboPortOfDestination.Text = Me.cbopodCode.Text + "-" + Me.txtPOD.Text
+                Me.txtdiadiemgiaohang.Text = Me.cbopodCode.Text
 
             End If
         Catch ex As Exception
@@ -8880,7 +8881,11 @@ Err_Renamed:
     End Sub
 
     Private Sub cbopodCode_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cbopodCode.SelectedIndexChanged
+        Try
+            Me.txtdiadiemgiaohang.Text = Me.cbopodCode.Text
+        Catch ex As Exception
 
+        End Try
     End Sub
 
     Private Sub Button19_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button19.Click
@@ -16585,7 +16590,7 @@ Err_Renamed:
 
     Private Sub txtPOD_TextChanged(sender As Object, e As EventArgs) Handles txtPOD.TextChanged
         Try
-            Me.txtdiadiemgiaohang.Text = Me.txtPOD.Text
+            'Me.txtdiadiemgiaohang.Text = Me.txtPOD.Text
         Catch ex As Exception
 
         End Try
@@ -16845,5 +16850,13 @@ Err_Renamed:
 
     Private Sub cboShipper_TextChanged(sender As Object, e As EventArgs) Handles cboShipper.TextChanged
 
+    End Sub
+
+    Private Sub cbopodCode_TextChanged(sender As Object, e As EventArgs) Handles cbopodCode.TextChanged
+        Try
+            Me.txtdiadiemgiaohang.Text = Me.cbopodCode.Text
+        Catch ex As Exception
+
+        End Try
     End Sub
 End Class

@@ -157,7 +157,10 @@ Public Class frmImportSeaImportJob
 
                 Dim polFull As String = GetCellText(ws, "N", rowIndex)
                 Dim podFull As String = GetCellText(ws, "O", rowIndex)
-                Dim refNo As String = GenerateRefNumber(gflc, DefaultGsc, polFull, podFull)
+                Dim refNo As String = GetCellText(ws, "AE", rowIndex)
+                If refNo = "" Then
+                    refNo = GenerateRefNumber(gflc, DefaultGsc, polFull, podFull)
+                End If
                 If refNo = "" Then
                     skipped += 1
                     errors.AppendLine("Dong " & rowIndex.ToString() & ": Khong tao duoc Ref.")
@@ -786,6 +789,7 @@ Public Class frmImportSeaImportJob
             End If
 
             SetFieldIfHasText(rs, "status", GetCellText(ws, "AC", rowIndex))
+            SetFieldIfHasText(rs, "ref", GetCellText(ws, "AE", rowIndex))
             SetFieldIfHasText(rs, "arrival_soContSeal", BuildArrivalSoContSeal(ws, rowIndex))
 
             Dim cargoReady As Date? = GetCellDate(ws, "P", rowIndex)

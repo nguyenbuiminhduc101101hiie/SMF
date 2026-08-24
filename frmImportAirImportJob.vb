@@ -149,7 +149,10 @@ Public Class frmImportAirImportJob
 
                 Dim polCode As String = GetCellText(ws, "O", rowIndex)
                 Dim podCode As String = GetCellText(ws, "P", rowIndex)
-                Dim refNo As String = GenerateRefNumber(polCode, podCode)
+                Dim refNo As String = GetCellText(ws, "AA", rowIndex)
+                If refNo = "" Then
+                    refNo = GenerateRefNumber(polCode, podCode)
+                End If
                 If refNo = "" Then
                     skipped += 1
                     errors.AppendLine("Dong " & rowIndex.ToString() & ": Khong tao duoc Ref.")
@@ -530,6 +533,7 @@ Public Class frmImportAirImportJob
             End If
 
             SetFieldIfHasText(rs, "status", GetCellText(ws, "Z", rowIndex))
+            SetFieldIfHasText(rs, "ref", GetCellText(ws, "AA", rowIndex))
 
             Dim cargoReady As Date? = GetCellDate(ws, "Q", rowIndex)
             If cargoReady.HasValue Then
