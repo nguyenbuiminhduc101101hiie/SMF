@@ -104,6 +104,11 @@ Public Class frmImportAirImportJob
             app.DisplayAlerts = False
 
             workbook = app.Workbooks.Open(Me.txtFileName.Text.Trim)
+            Try
+                app.Calculation = XlCalculation.xlCalculationAutomatic
+                app.Calculate()
+            Catch
+            End Try
             Dim ws As _Worksheet = Nothing
             Try
                 ws = workbook.Worksheets(Me.txtSheetName.Text.Trim)
@@ -718,14 +723,39 @@ Public Class frmImportAirImportJob
 
     Private Function GetCellText(ByVal ws As _Worksheet, ByVal col As String, ByVal rowIndex As Integer) As String
         Try
-            Dim cellValue As Object = ws.Range(col & rowIndex.ToString()).Value2
-            If cellValue Is Nothing Then
-                Return ""
+            Dim rng As Range = ws.Range(col & rowIndex.ToString())
+            Dim text As String = CellValueToText(rng.Value2)
+            If text <> "" Then
+                Return text
             End If
-            Return cellValue.ToString().Trim()
+
+            ' Excel COM sometimes returns empty Value2 even when the cell has data.
+            text = CellValueToText(rng.Value2)
+            If text <> "" Then
+                Return text
+            End If
+
+            Try
+                If rng.Text IsNot Nothing Then
+                    text = rng.Text.ToString().Trim()
+                    If text <> "" Then
+                        Return text
+                    End If
+                End If
+            Catch
+            End Try
+
+            Return ""
         Catch ex As Exception
             Return ""
         End Try
+    End Function
+
+    Private Function CellValueToText(ByVal cellValue As Object) As String
+        If cellValue Is Nothing OrElse IsDBNull(cellValue) Then
+            Return ""
+        End If
+        Return cellValue.ToString().Trim()
     End Function
 
     Private Function GetCellDate(ByVal ws As _Worksheet, ByVal col As String, ByVal rowIndex As Integer) As Date?
