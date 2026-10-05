@@ -8,7 +8,7 @@ Public Class frmImportSeaImportJob
 
     Private Sub frmImportSeaImportJob_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.txtSheetName.Items.Clear()
-        Me.lblNote.Text = "Du lieu import bat dau tu dong 5 trong file Excel template."
+        Me.lblNote.Text = "Du lieu import bat dau tu dong 5. 1 dong = 1 container; cung HBL se them/sua container tren bill do."
     End Sub
 
     Private Sub cmdBrowser_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmdBrowser.Click
@@ -91,8 +91,10 @@ Public Class frmImportSeaImportJob
         Dim workbook As _Workbook = Nothing
         Dim imported As Integer = 0
         Dim updated As Integer = 0
+        Dim containersAdded As Integer = 0
         Dim skipped As Integer = 0
         Dim errors As New System.Text.StringBuilder()
+        Dim affectedBills As New Dictionary(Of String, Boolean)
 
         Me.cmdOK.Enabled = False
         Me.cmdCancel.Enabled = False
@@ -141,10 +143,24 @@ Public Class frmImportSeaImportJob
                     Continue For
                 End If
 
+                Dim motRow As String = GetCellText(ws, "C", rowIndex)
+                Dim gflcRow As String = MapMotToGflc(motRow)
+                Dim containerNoRow As String = GetCellText(ws, "T", rowIndex)
+                If gflcRow = "F" AndAlso containerNoRow = "" Then
+                    skipped += 1
+                    errors.AppendLine("Dong " & rowIndex.ToString() & ": FCL bat buoc co so container (cot T).")
+                    Continue For
+                End If
+
                 Dim existingBlibId As String = GetInboundBlibIdByHbl(hbl)
                 If existingBlibId <> "" Then
                     If UpdateInboundRecord(ws, rowIndex, existingBlibId, errors) Then
-                        UpdateContainerRecord(ws, rowIndex, existingBlibId, errors)
+                        Dim insertedCont As Boolean = False
+                        UpdateContainerRecord(ws, rowIndex, existingBlibId, errors, insertedCont)
+                        If insertedCont Then
+                            containersAdded += 1
+                        End If
+                        affectedBills(existingBlibId) = True
                         updated += 1
                     Else
                         skipped += 1
@@ -182,12 +198,18 @@ Public Class frmImportSeaImportJob
                     errors.AppendLine("Dong " & rowIndex.ToString() & ": Tao inbound thanh cong nhung loi khi tao container.")
                 End If
 
+                affectedBills(blibId) = True
                 imported += 1
+            Next
+
+            For Each blibIdKey As String In affectedBills.Keys
+                RecalcInboundCargoTotals(blibIdKey, errors)
             Next
 
             Dim message As String = "Import hoan tat." & vbCrLf &
                 "Them moi: " & imported.ToString() & vbCrLf &
                 "Cap nhat: " & updated.ToString() & vbCrLf &
+                "Them container vao bill da co: " & containersAdded.ToString() & vbCrLf &
                 "Bo qua/Loi: " & skipped.ToString()
             If errors.Length > 0 Then
                 message &= vbCrLf & vbCrLf & errors.ToString()
@@ -702,24 +724,6 @@ Public Class frmImportSeaImportJob
             SetFieldIfHasText(rs, "hbl", GetCellText(ws, "J", rowIndex))
             SetFieldIfHasText(rs, "arrival_hbl", GetCellText(ws, "J", rowIndex))
 
-            Dim pkgTextK As String = GetCellText(ws, "K", rowIndex)
-            If pkgTextK <> "" Then
-                Dim soKienKUpd As String = ""
-                Dim pkgTypeKUpd As String = ""
-                ParsePackageInfo(pkgTextK, soKienKUpd, pkgTypeKUpd)
-                SetFieldIfHasText(rs, "tongSoKienLoaiKien", soKienKUpd)
-                SetFieldIfHasText(rs, "loaikien", pkgTypeKUpd)
-                SetFieldIfHasText(rs, "arrival_soluong", FormatArrivalSoluong(soKienKUpd, pkgTypeKUpd, pkgTextK))
-            End If
-            Dim soKgL As String = GetCellText(ws, "L", rowIndex)
-            If soKgL <> "" Then
-                SetFieldIfHasText(rs, "arrival_trongluong", soKgL & " KGS")
-            End If
-            Dim soKhoiM As String = GetCellText(ws, "M", rowIndex)
-            If soKhoiM <> "" Then
-                SetFieldIfHasText(rs, "arrival_khoiluong", soKhoiM & " CBM")
-            End If
-
             Dim polCode As String = GetCellText(ws, "N", rowIndex)
             If polCode <> "" Then
                 Dim polName As String = GetPortNameByCode(polCode)
@@ -795,7 +799,6 @@ Public Class frmImportSeaImportJob
 
             SetFieldIfHasText(rs, "status", GetCellText(ws, "AC", rowIndex))
             SetFieldIfHasText(rs, "ref", GetCellText(ws, "AE", rowIndex))
-            SetFieldIfHasText(rs, "arrival_soContSeal", BuildArrivalSoContSeal(ws, rowIndex))
 
             Dim cargoReady As Date? = GetCellDate(ws, "P", rowIndex)
             If cargoReady.HasValue Then
@@ -845,8 +848,9 @@ Public Class frmImportSeaImportJob
         End Try
     End Function
 
-    Private Function UpdateContainerRecord(ByVal ws As _Worksheet, ByVal rowIndex As Integer, ByVal blibId As String, ByVal errors As System.Text.StringBuilder) As Boolean
+    Private Function UpdateContainerRecord(ByVal ws As _Worksheet, ByVal rowIndex As Integer, ByVal blibId As String, ByVal errors As System.Text.StringBuilder, Optional ByRef inserted As Boolean = False) As Boolean
         Dim rs As New ADODB.Recordset
+        inserted = False
         Try
             Dim pkgText As String = GetCellText(ws, "K", rowIndex)
             Dim soKg As String = GetCellText(ws, "L", rowIndex)
@@ -859,10 +863,12 @@ Public Class frmImportSeaImportJob
                 Return True
             End If
 
-            rs.Open("SELECT TOP 1 * FROM containerrepair WHERE inboundContainersID='" & SqlSafe(blibId) & "' OR inboundID='" & SqlSafe(blibId) & "'", strconn, ADODB.CursorTypeEnum.adOpenDynamic, ADODB.LockTypeEnum.adLockOptimistic, ADODB.CommandTypeEnum.adCmdText)
+            Dim lookupSql As String = BuildContainerLookupSql(blibId, containerNo)
+            rs.Open(lookupSql, strconn, ADODB.CursorTypeEnum.adOpenDynamic, ADODB.LockTypeEnum.adLockOptimistic, ADODB.CommandTypeEnum.adCmdText)
             If rs.EOF Then
                 rs.Close()
-                Return InsertContainerRecord(ws, rowIndex, blibId, errors)
+                inserted = InsertContainerRecord(ws, rowIndex, blibId, errors)
+                Return inserted
             End If
 
             If pkgText <> "" Then
@@ -928,7 +934,7 @@ Public Class frmImportSeaImportJob
 
             rs.Open("SELECT TOP 1 * FROM containerrepair", strconn, ADODB.CursorTypeEnum.adOpenDynamic, ADODB.LockTypeEnum.adLockOptimistic, ADODB.CommandTypeEnum.adCmdText)
             rs.AddNew()
-            rs.Fields("inboundContainersID").Value = blibId
+            rs.Fields("inboundContainersID").Value = NewId()
             rs.Fields("inboundID").Value = getID(blibId)
             rs.Fields("sokien").Value = soKien
             rs.Fields("type").Value = pkgType
@@ -951,6 +957,125 @@ Public Class frmImportSeaImportJob
             End Try
             Return False
         End Try
+    End Function
+
+    Private Function BuildContainerLookupSql(ByVal blibId As String, ByVal containerNo As String) As String
+        Dim inboundId As String = getID(blibId)
+        Dim billFilter As String = "(inboundID='" & SqlSafe(inboundId) & "' OR inboundID='" & SqlSafe(blibId) & "' OR inboundContainersID='" & SqlSafe(blibId) & "')"
+        If containerNo = "" Then
+            Return "SELECT TOP 1 * FROM containerrepair WHERE " & billFilter & " AND LTRIM(RTRIM(ISNULL(containerno,'')))=''"
+        End If
+        Return "SELECT TOP 1 * FROM containerrepair WHERE " & billFilter & " AND LTRIM(RTRIM(ISNULL(containerno,'')))='" & SqlSafe(containerNo) & "'"
+    End Function
+
+    Private Sub RecalcInboundCargoTotals(ByVal blibId As String, ByVal errors As System.Text.StringBuilder)
+        Dim rsIn As New ADODB.Recordset
+        Try
+            Dim inboundId As String = getID(blibId)
+            Dim sqlCont As String = "SELECT containerno, seal, containertype, sokien, type, sokg, sokhoi FROM containerrepair WHERE inboundID='" & SqlSafe(inboundId) & "' OR inboundID='" & SqlSafe(blibId) & "' OR inboundContainersID='" & SqlSafe(blibId) & "'"
+            Dim ds As DataSet = ReadDataSet(sqlCont)
+
+            Dim motLabel As String = "LCL"
+            Dim gflcDs As DataSet = ReadDataSet("SELECT TOP 1 gFLC FROM inbound WHERE BLIB_ID='" & SqlSafe(blibId) & "' and continued=1")
+            If gflcDs IsNot Nothing AndAlso gflcDs.Tables.Count > 0 AndAlso gflcDs.Tables(0).Rows.Count > 0 Then
+                If NullToText(gflcDs.Tables(0).Rows(0).Item("gFLC")) = "F" Then
+                    motLabel = "FCL"
+                End If
+            End If
+
+            Dim soContSeal As New System.Text.StringBuilder()
+            Dim totalKien As Double = 0
+            Dim totalKg As Double = 0
+            Dim totalCbm As Double = 0
+            Dim pkgType As String = ""
+
+            If ds IsNot Nothing AndAlso ds.Tables.Count > 0 Then
+                For Each row As DataRow In ds.Tables(0).Rows
+                    Dim contNo As String = NullToText(row("containerno"))
+                    Dim seal As String = NullToText(row("seal"))
+                    Dim contType As String = NullToText(row("containertype"))
+                    soContSeal.Append(contNo & " / " & seal & " / " & contType & "/" & motLabel & Chr(13))
+                    totalKien += ParseNumeric(row("sokien"))
+                    totalKg += ParseNumeric(row("sokg"))
+                    totalCbm += ParseNumeric(row("sokhoi"))
+                    If pkgType = "" Then
+                        pkgType = NullToText(row("type"))
+                    End If
+                Next
+            End If
+
+            rsIn.Open("SELECT TOP 1 * FROM inbound WHERE BLIB_ID='" & SqlSafe(blibId) & "' and continued=1", strconn, ADODB.CursorTypeEnum.adOpenDynamic, ADODB.LockTypeEnum.adLockOptimistic, ADODB.CommandTypeEnum.adCmdText)
+            If rsIn.EOF Then
+                rsIn.Close()
+                Return
+            End If
+
+            Dim kienText As String = FormatQty(totalKien)
+            Try
+                rsIn.Fields("arrival_soContSeal").Value = soContSeal.ToString()
+            Catch
+            End Try
+            Try
+                rsIn.Fields("tongSoKienLoaiKien").Value = kienText
+            Catch
+            End Try
+            Try
+                rsIn.Fields("loaikien").Value = pkgType
+            Catch
+            End Try
+            Try
+                rsIn.Fields("arrival_soluong").Value = FormatArrivalSoluong(kienText, pkgType, kienText)
+            Catch
+            End Try
+            Try
+                rsIn.Fields("arrival_trongluong").Value = FormatQty(totalKg) & " KGS"
+            Catch
+            End Try
+            Try
+                rsIn.Fields("arrival_khoiluong").Value = FormatQty(totalCbm) & " CBM"
+            Catch
+            End Try
+
+            rsIn.Update()
+            rsIn.Close()
+        Catch ex As Exception
+            errors.AppendLine("Cong tong cargo HBL " & blibId & ": " & ex.Message)
+            Try
+                If rsIn.State = ADODB.ObjectStateEnum.adStateOpen Then
+                    rsIn.Close()
+                End If
+            Catch
+            End Try
+        End Try
+    End Sub
+
+    Private Function NullToText(ByVal value As Object) As String
+        If value Is Nothing OrElse IsDBNull(value) Then
+            Return ""
+        End If
+        Return value.ToString().Trim()
+    End Function
+
+    Private Function ParseNumeric(ByVal value As Object) As Double
+        Dim s As String = NullToText(value).Replace(",", "")
+        If s = "" Then
+            Return 0
+        End If
+        Dim n As Double
+        If Double.TryParse(s, Globalization.NumberStyles.Any, Globalization.CultureInfo.InvariantCulture, n) Then
+            Return n
+        End If
+        If Double.TryParse(s, n) Then
+            Return n
+        End If
+        Return 0
+    End Function
+
+    Private Function FormatQty(ByVal n As Double) As String
+        If n = Math.Truncate(n) Then
+            Return CLng(n).ToString()
+        End If
+        Return n.ToString("0.###", Globalization.CultureInfo.InvariantCulture)
     End Function
 
     Private Sub ParsePackageInfo(ByVal pkgText As String, ByRef soKien As String, ByRef pkgType As String)

@@ -762,12 +762,6 @@ Err_Renamed:
             sqlR = "select * from debitcredittemp order by stt "
             ' dsR = ReadDataSet(sqlR)
             ' rptDoCument.SetDataSource(dsR.Tables(0))
-            Me.CrystalReportViewer1.ReportSource = rptDoCument
-            Me.CrystalReportViewer1.Show()
-            '---------------------------------
-            CrystalReportViewer1.ReportSource = rptDoCument
-            '---------------------------------------------------------
-            '' ''------------------------------------------
             Dim tbCurrent As CrystalDecisions.CrystalReports.Engine.Table
             Dim tliCurrent As CrystalDecisions.Shared.TableLogOnInfo
             For Each tbCurrent In rptDoCument.Database.Tables
@@ -780,6 +774,35 @@ Err_Renamed:
                 End With
                 tbCurrent.ApplyLogOnInfo(tliCurrent)
             Next tbCurrent
+
+            rptDoCument.SetDatabaseLogon(strUserId, strPassword, strServer, strDatabase)
+
+            '--------------connect ko can login
+            Dim connection As IConnectionInfo
+            For Each connection In rptDoCument.DataSourceConnections
+                connection.SetConnection(strServer, strDatabase, strUserId, strPassword)
+            Next
+
+            Dim subreport As ReportDocument
+            For Each subreport In rptDoCument.Subreports
+                For Each tbCurrent In subreport.Database.Tables
+                    tliCurrent = tbCurrent.LogOnInfo
+                    With tliCurrent.ConnectionInfo
+                        .ServerName = strServer
+                        .UserID = strUserId
+                        .Password = strPassword
+                        .DatabaseName = strDatabase
+                    End With
+                    tbCurrent.ApplyLogOnInfo(tliCurrent)
+                Next tbCurrent
+
+                For Each connection In subreport.DataSourceConnections
+                    connection.SetConnection(strServer, strDatabase, strUserId, strPassword)
+                Next
+            Next
+            '----------------------------------------------------------------------------
+            CrystalReportViewer1.ReportSource = rptDoCument
+            Me.CrystalReportViewer1.Show()
 
 
 
@@ -1721,6 +1744,45 @@ Err_Renamed:
         m.Text = dt.Month
         y = rptDoCument.ReportDefinition.ReportObjects("Year")
         y.Text = dt.Year
+
+        Dim tbCurrent As CrystalDecisions.CrystalReports.Engine.Table
+        Dim tliCurrent As CrystalDecisions.Shared.TableLogOnInfo
+        For Each tbCurrent In rptDoCument.Database.Tables
+            tliCurrent = tbCurrent.LogOnInfo
+            With tliCurrent.ConnectionInfo
+                .ServerName = strServer
+                .UserID = strUserId
+                .Password = strPassword
+                .DatabaseName = strDatabase
+            End With
+            tbCurrent.ApplyLogOnInfo(tliCurrent)
+        Next tbCurrent
+
+        rptDoCument.SetDatabaseLogon(strUserId, strPassword, strServer, strDatabase)
+
+        Dim connection As IConnectionInfo
+        For Each connection In rptDoCument.DataSourceConnections
+            connection.SetConnection(strServer, strDatabase, strUserId, strPassword)
+        Next
+
+        Dim subreport As ReportDocument
+        For Each subreport In rptDoCument.Subreports
+            For Each tbCurrent In subreport.Database.Tables
+                tliCurrent = tbCurrent.LogOnInfo
+                With tliCurrent.ConnectionInfo
+                    .ServerName = strServer
+                    .UserID = strUserId
+                    .Password = strPassword
+                    .DatabaseName = strDatabase
+                End With
+                tbCurrent.ApplyLogOnInfo(tliCurrent)
+            Next tbCurrent
+
+            For Each connection In subreport.DataSourceConnections
+                connection.SetConnection(strServer, strDatabase, strUserId, strPassword)
+            Next
+        Next
+
         Me.CrystalReportViewer1.ReportSource = rptDoCument
         'Formatting paper
 

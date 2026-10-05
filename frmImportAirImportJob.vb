@@ -399,6 +399,88 @@ Public Class frmImportAirImportJob
             rs.Fields("closeFile").Value = (UCase(GetCellText(ws, "Y", rowIndex)) = "TRUE")
             rs.Fields("status").Value = GetCellText(ws, "Z", rowIndex)
 
+            Dim kgAvailable As String = GetCellText(ws, "N", rowIndex)
+            If kgAvailable <> "" Then
+                Try
+                    rs.Fields("kgavailable").Value = kgAvailable
+                Catch ex As Exception
+                End Try
+            End If
+
+            ' Arrival Notice / DO - link tiep tu cung du lieu excel, giong Button42_Click
+            Dim arrivalConsignee As String = GetCellText(ws, "H", rowIndex)
+            Try
+                rs.Fields("arrival_kinhgui").Value = arrivalConsignee
+            Catch ex As Exception
+            End Try
+            Try
+                rs.Fields("DO_Consignee").Value = arrivalConsignee
+            Catch ex As Exception
+            End Try
+
+            Try
+                rs.Fields("arrival_tau").Value = GetCellText(ws, "U", rowIndex)
+            Catch ex As Exception
+            End Try
+
+            If polName <> "" Then
+                Try
+                    rs.Fields("arrival_POL").Value = polName
+                Catch ex As Exception
+                End Try
+            End If
+            If podName <> "" Then
+                Try
+                    rs.Fields("arrival_POd").Value = podName
+                Catch ex As Exception
+                End Try
+            End If
+
+            Dim arrivalEta As Date? = GetCellDate(ws, "T", rowIndex)
+            If arrivalEta.HasValue Then
+                Try
+                    rs.Fields("arrival_ETA").Value = ddMMMyyyy(arrivalEta.Value)
+                Catch ex As Exception
+                End Try
+            End If
+
+            Try
+                rs.Fields("arrival_hbl").Value = GetCellText(ws, "J", rowIndex)
+            Catch ex As Exception
+            End Try
+            If mbl <> "" Then
+                Try
+                    rs.Fields("arrival_mbl").Value = mbl
+                Catch ex As Exception
+                End Try
+            End If
+
+            Dim arrivalSoKien As String = ""
+            Dim arrivalPkgType As String = ""
+            ParsePackageInfo(GetCellText(ws, "K", rowIndex), arrivalSoKien, arrivalPkgType)
+            If arrivalSoKien <> "" Then
+                Try
+                    rs.Fields("arrival_soluong").Value = (arrivalSoKien & " " & arrivalPkgType).Trim
+                Catch ex As Exception
+                End Try
+            End If
+
+            Dim arrivalSoKg As String = GetCellText(ws, "L", rowIndex)
+            If arrivalSoKg <> "" Then
+                Try
+                    rs.Fields("arrival_trongluong").Value = arrivalSoKg
+                Catch ex As Exception
+                End Try
+            End If
+
+            Dim arrivalSoKhoi As String = GetCellText(ws, "M", rowIndex)
+            If arrivalSoKhoi <> "" Then
+                Try
+                    rs.Fields("arrival_khoiluong").Value = arrivalSoKhoi
+                Catch ex As Exception
+                End Try
+            End If
+
             Try
                 rs.Fields("customerid_showtc").Value = "{" & customerId.Replace("{", "").Replace("}", "") & "}"
             Catch ex As Exception
@@ -539,6 +621,42 @@ Public Class frmImportAirImportJob
 
             SetFieldIfHasText(rs, "status", GetCellText(ws, "Z", rowIndex))
             SetFieldIfHasText(rs, "ref", GetCellText(ws, "AA", rowIndex))
+            SetFieldIfHasText(rs, "kgavailable", GetCellText(ws, "N", rowIndex))
+
+            ' Arrival Notice / DO - link tiep tu cung du lieu excel, giong Button42_Click
+            Dim arrivalConsignee As String = GetCellText(ws, "H", rowIndex)
+            SetFieldIfHasText(rs, "arrival_kinhgui", arrivalConsignee)
+            SetFieldIfHasText(rs, "DO_Consignee", arrivalConsignee)
+
+            SetFieldIfHasText(rs, "arrival_tau", GetCellText(ws, "U", rowIndex))
+
+            If polCode <> "" Then
+                SetFieldIfHasText(rs, "arrival_POL", GetPortNameByCode(polCode))
+            End If
+            If podCode <> "" Then
+                SetFieldIfHasText(rs, "arrival_POd", GetPortNameByCode(podCode))
+            End If
+
+            Dim arrivalEta As Date? = GetCellDate(ws, "T", rowIndex)
+            If arrivalEta.HasValue Then
+                Try
+                    rs.Fields("arrival_ETA").Value = ddMMMyyyy(arrivalEta.Value)
+                Catch ex As Exception
+                End Try
+            End If
+
+            SetFieldIfHasText(rs, "arrival_hbl", GetCellText(ws, "J", rowIndex))
+            SetFieldIfHasText(rs, "arrival_mbl", GetCellText(ws, "I", rowIndex))
+
+            Dim arrivalSoKien As String = ""
+            Dim arrivalPkgType As String = ""
+            ParsePackageInfo(GetCellText(ws, "K", rowIndex), arrivalSoKien, arrivalPkgType)
+            If arrivalSoKien <> "" Then
+                SetFieldIfHasText(rs, "arrival_soluong", (arrivalSoKien & " " & arrivalPkgType).Trim)
+            End If
+
+            SetFieldIfHasText(rs, "arrival_trongluong", GetCellText(ws, "L", rowIndex))
+            SetFieldIfHasText(rs, "arrival_khoiluong", GetCellText(ws, "M", rowIndex))
 
             Dim cargoReady As Date? = GetCellDate(ws, "Q", rowIndex)
             If cargoReady.HasValue Then
@@ -619,12 +737,8 @@ Public Class frmImportAirImportJob
             End If
             If kgAvailable <> "" Then
                 Try
-                    rs.Fields("kgavailable").Value = kgAvailable
+                    rs.Fields("chargeable").Value = kgAvailable
                 Catch ex As Exception
-                    Try
-                        rs.Fields("chargeable").Value = kgAvailable
-                    Catch
-                    End Try
                 End Try
             End If
 
@@ -671,12 +785,8 @@ Public Class frmImportAirImportJob
             rs.Fields("sokhoi").Value = GetCellText(ws, "M", rowIndex)
 
             Try
-                rs.Fields("kgavailable").Value = GetCellText(ws, "N", rowIndex)
+                rs.Fields("chargeable").Value = GetCellText(ws, "N", rowIndex)
             Catch ex As Exception
-                Try
-                    rs.Fields("chargeable").Value = GetCellText(ws, "N", rowIndex)
-                Catch
-                End Try
             End Try
 
             rs.Update()

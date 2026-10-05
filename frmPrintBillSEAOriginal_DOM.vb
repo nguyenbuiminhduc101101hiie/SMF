@@ -508,6 +508,7 @@ Err_Renamed:
         m.Text = dt.Month
         y = rptDoCument.ReportDefinition.ReportObjects("Year")
         y.Text = dt.Year
+        ApplyCrystalDatabaseLogon(rptDoCument)
         Me.CrystalReportViewer1.ReportSource = rptDoCument
         'Formatting paper
 
@@ -1366,6 +1367,7 @@ Err:
             'm.Text = dt.Month
             'y = rptDoCument.ReportDefinition.ReportObjects("Year")
             'y.Text = dt.Year
+            ApplyCrystalDatabaseLogon(rptDoCument)
             Me.CrystalReportViewer1.ReportSource = rptDoCument
             'Formatting paper
 
